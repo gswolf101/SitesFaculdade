@@ -4,42 +4,44 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="style.css">
+    <script defer src="script-global.js"></script>
 </head>
-<script>
-function toggleTheme(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-}
 
-if(localStorage.getItem("theme") === "dark"){
-    document.body.classList.add("dark");
-}
-</script>
+<body class="client">
 
-<body>
-
-<header><h1>Login</h1></header>
-<button class="theme-toggle" onclick="toggleTheme()">🌙 Tema</button>
+<header class="header">
+    <div class="brand">
+        <div class="logo">🔐</div>
+        <h1>Login</h1>
+    </div>
+</header>
 
 <div class="container">
-    <div class="card" style="max-width: 450px; margin:auto;">
+
+    <div class="panel" style="max-width:420px; margin:auto;">
+
         <h2>Acessar Sistema</h2>
 
         <form id="loginForm">
+
             <label>Email</label>
-            <input type="email">
+            <input type="email" required>
 
             <label>Senha</label>
-            <input type="password">
+            <input type="password" required>
 
-            <label style="display:flex;gap:8px;align-items:center;">
+            <label style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                 <input type="checkbox" id="func">
                 Sou Funcionário
             </label>
 
-            <button type="submit">Entrar</button>
+            <button type="submit" class="action-btn" style="margin-top:22px;">
+                Entrar
+            </button>
+
         </form>
     </div>
+
 </div>
 
 <script>
