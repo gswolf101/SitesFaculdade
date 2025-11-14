@@ -1,251 +1,252 @@
-/* ==========================
-      VARIÁVEIS DO TEMA
-========================== */
+/* style.css - tema cliente (blobs) + variante formal para funcionários */
 
-:root {
-    --bg: #f4f7f9;
-    --bg-alt: #e9eef2;
-    --card: #ffffff;
-    --text: #2c3e50;
-    --text-light: #6b8196;
-    --primary: #2c7a7b;
-    --primary-dark: #1f5c5d;
-    --border: #d0d6dd;
-    --input: #ffffff;
-    --shadow: rgba(0, 0, 0, 0.08);
-
-    --chat-bg: #eef2f4;
-    --msg-client: #d1f3f1;
-    --msg-func: #bfe3ff;
+/* ======= Variáveis comuns ======= */
+:root{
+  --bg: #ffffff;
+  --card: #f2f2f2;
+  --muted: #9aa0a6;
+  --text: #0b0b0b;
+  --accent: #111111;
+  --btn-bg: #000000;
+  --btn-text: #ffffff;
+  --radius-lg: 26px;
+  --radius-md: 14px;
+  --shadow: 0 6px 18px rgba(16,24,40,0.08);
+  --glass: rgba(255,255,255,0.6);
 }
 
-/* Tema escuro */
+/* ======= Employee (formal) variant ======= */
+body.employee {
+  --card: #ffffff;
+  --muted: #6c757d;
+  --text: #0f1720;
+  --accent: #0b3a3b;
+  --btn-bg: #0b3a3b;
+  --btn-text: #ffffff;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --shadow: 0 6px 18px rgba(4,12,20,0.08);
+}
+
+/* ======= Dark mode support (keeps look) ======= */
 body.dark {
-    --bg: #121212;
-    --bg-alt: #1b1b1b;
-    --card: #1e1e1e;
-    --text: #ececec;
-    --text-light: #9aa4ad;
-    --primary: #3ccccc;
-    --primary-dark: #2db0b0;
-    --border: #2d2d2d;
-    --input: #222;
-    --shadow: rgba(0, 0, 0, 0.45);
-
-    --chat-bg: #202020;
-    --msg-client: #144b4e;
-    --msg-func: #1c3e63;
+  --card: #1b1b1b;
+  --text: #e8eef1;
+  --muted: #9aa0a6;
+  --btn-bg: #0b3a3b;
 }
 
-/* ==========================
-         BASE GLOBAL
-========================== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", Arial, sans-serif;
+/* ======= Reset & base ======= */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  transition:background .25s,color .25s;
 }
 
-body {
-    background: var(--bg);
-    color: var(--text);
-    transition: 0.25s ease-in-out;
+/* ======= Client background blobs (apply when body has class "client") ======= */
+body.client{
+  background: linear-gradient(180deg,#fff 0%, #fff 30%);
+  position:relative;
+  overflow-x:hidden;
 }
 
-h1, h2, h3 {
-    letter-spacing: -0.5px;
-    font-weight: 600;
+/* decorative blobs */
+body.client::before,
+body.client::after{
+  content:"";
+  position:fixed;
+  z-index:0;
+  pointer-events:none;
+  border-radius:50%;
 }
 
-p {
-    color: var(--text-light);
+/* top-right grey blob */
+body.client::before{
+  width:420px;
+  height:320px;
+  right:-80px;
+  top:-60px;
+  background: #9aa0a6; /* grey */
+  transform: rotate(-10deg);
+  opacity:0.9;
 }
 
-/* ==========================
-           HEADER
-========================== */
-header {
-    background: var(--primary);
-    padding: 25px 20px;
-    color: white;
-    text-align: center;
-    font-size: 22px;
-    box-shadow: 0 2px 8px var(--shadow);
-    position: relative;
+/* left-bottom peach blob */
+body.client::after{
+  width:520px;
+  height:520px;
+  left:-150px;
+  bottom:-120px;
+  background: #f6b98b; /* peach */
+  opacity:0.95;
 }
 
-/* Botão tema */
-.theme-toggle {
-    position: absolute;
-    right: 20px;
-    top: 18px;
-    background: var(--card);
-    color: var(--text);
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
-.theme-toggle:hover {
-    filter: brightness(0.9);
+/* container sizing */
+.container{
+  max-width:980px;
+  margin:20px auto;
+  padding:18px;
+  position:relative;
+  z-index:2;
 }
 
-/* ==========================
-              NAV
-========================== */
-
-nav {
-    background: var(--card);
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    gap: 22px;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 2px 6px var(--shadow);
-    flex-wrap: wrap;
+/* header */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
 }
 
-nav a {
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 6px;
-    transition: 0.2s;
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brand .logo{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--card); display:flex;align-items:center;justify-content:center;
+  box-shadow: var(--shadow);
+}
+.brand h1{font-size:28px;margin:0;font-weight:800;letter-spacing:-1px}
+
+/* hamburger */
+.hamburger{
+  width:44px;height:44px;border-radius:8px;background:var(--card);display:flex;align-items:center;justify-content:center;
+  box-shadow: var(--shadow);
 }
 
-nav a:hover {
-    background: var(--primary);
-    color: white;
+/* big rounded panel that appears in sketch */
+.panel{
+  background:var(--card);
+  border-radius: var(--radius-lg);
+  padding:20px;
+  box-shadow: var(--shadow);
 }
 
-/* ==========================
-           CONTAINER
-========================== */
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 40px 20px;
+/* title inside panel */
+.panel h2{font-size:28px;margin:6px 0 16px;font-weight:800}
+
+/* pet item */
+.pet-item{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  background: #fff;
+  border-radius: 18px;
+  padding:12px;
+  border:1px solid rgba(0,0,0,0.03);
+  box-shadow: 0 4px 10px rgba(10,10,10,0.03);
 }
 
-/* ==========================
-              CARD
-========================== */
-.card {
-    background: var(--card);
-    padding: 25px;
-    border-radius: 14px;
-    box-shadow: 0px 4px 12px var(--shadow);
-    margin-bottom: 25px;
-    border: 1px solid var(--border);
-    transition: 0.2s;
+.pet-avatar{
+  width:64px;height:64px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 6px 14px rgba(0,0,0,0.08)
+}
+.pet-name{font-size:20px;font-weight:700}
+
+/* add pet CTA (big pill) */
+.btn-pill{
+  display:block;
+  width:100%;
+  text-align:center;
+  padding:20px;
+  margin-top:14px;
+  background:var(--glass);
+  color:var(--muted);
+  font-size:26px;
+  font-weight:700;
+  border-radius:20px;
+  border:1px solid rgba(0,0,0,0.03);
 }
 
-.card:hover {
-    transform: translateY(-3px);
+/* search style from sketch */
+.search{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:16px 20px;
+  border-radius:30px;
+  border:6px solid #000;
+  background: #fff;
+  font-size:18px;
+  height:64px;
 }
 
-/* ==========================
-         FORMULÁRIOS
-========================== */
-input, select, textarea {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    margin-bottom: 15px;
-    background: var(--input);
-    color: var(--text);
-    transition: 0.2s;
+/* huge black action buttons like sketch */
+.action-list{display:flex;flex-direction:column;gap:18px;margin-top:18px}
+
+.action-btn{
+  background:var(--btn-bg);
+  color:var(--btn-text);
+  border-radius:22px;
+  padding:20px;
+  font-size:20px;
+  font-weight:800;
+  text-align:center;
+  box-shadow:var(--shadow);
+  border:0;
 }
 
-input:focus, select:focus, textarea:focus {
-    border-color: var(--primary);
-    outline: none;
+/* purple rounded back button in sketch bottom */
+.btn-back{
+  margin:34px auto 0;
+  display:inline-block;
+  padding:24px 36px;
+  border-radius:40px;
+  background:#6f4bb0;
+  color:#fff;
+  font-size:20px;
+  font-weight:700;
+  text-align:center;
 }
 
-/* ==========================
-            BOTÕES
-========================== */
-button {
-    padding: 14px 24px;
-    background: var(--primary);
-    color: white;
-    font-size: 15px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.2s;
+/* CHAT area (client uses same soft look) */
+.chat-box{
+  max-width:700px;
+  margin:12px auto;
+  padding:14px;
+  background:var(--card);
+  border-radius:18px;
+  box-shadow:var(--shadow);
 }
-button:hover {
-    background: var(--primary-dark);
+.chat-window{
+  height:360px;
+  overflow:auto;
+  background:var(--bg);
+  padding:12px;border-radius:12px;
 }
+.msg{padding:12px 16px;border-radius:14px;margin-bottom:12px;max-width:78%}
+.msg.client{background:var(--msg-client, #d1f3f1);color:#000}
+.msg.mine{background:var(--msg-func, #bfe3ff);margin-left:auto;color:#000}
 
-/* ==========================
-              CHAT
-========================== */
-.chat-box {
-    max-width: 700px;
-    margin: auto;
-    background: var(--card);
-    padding: 20px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    box-shadow: 0px 4px 12px var(--shadow);
+/* FORM elements */
+label{display:block;margin-bottom:6px;color:var(--muted);font-weight:600}
+input,select,textarea{
+  width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);background: #fff;
+  font-size:15px;margin-bottom:12px;
 }
 
-.chat-window {
-    height: 420px;
-    overflow-y: auto;
-    padding: 18px;
-    background: var(--chat-bg);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    margin-bottom: 15px;
+/* smaller helper text */
+.small{font-size:13px;color:var(--muted)}
+
+/* ===== responsive tweaks ===== */
+@media(min-width:900px){
+  .container{padding:40px}
+  .panel{padding:28px}
+  .pet-avatar{width:72px;height:72px}
+  .search{height:72px;font-size:20px}
 }
 
-.msg {
-    background: var(--msg-client);
-    padding: 12px 18px;
-    border-radius: 14px;
-    margin-bottom: 12px;
-    max-width: 75%;
-    color: white;
-}
-
-.msg.mine {
-    background: var(--msg-func);
-    margin-left: auto;
-}
-
-/* ==========================
-          RESPONSIVO
-========================== */
-@media (max-width: 600px) {
-    nav {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    header {
-        font-size: 18px;
-        padding: 18px;
-    }
-
-    .theme-toggle {
-        top: 10px;
-        right: 10px;
-    }
-
-    .card {
-        padding: 18px;
-    }
-
-    button {
-        width: 100%;
-    }
-}
+/* ====== Employee specific adjustments via body.employee ====== */
+/* when body has .employee keep more formal layout */
+body.employee .panel{border-radius:12px}
+body.employee .pet-item{border-radius:8px;padding:10px;background:var(--card)}
+body.employee .action-btn{border-radius:8px;padding:12px;font-weight:700}
+body.employee .brand h1{font-size:20px;font-weight:700}
