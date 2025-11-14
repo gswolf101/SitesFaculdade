@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Histórico</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../script-global.js" defer></script>
+</head>
+<body class="client">
+  <div class="side-menu-overlay" onclick="closeSideMenu()"></div>
+  <aside class="side-menu" aria-hidden="true">
+    <div class="menu-header">
+      <div class="avatar"><img src="../assets/pet-placeholder.png" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="menu-user"><div class="name">João Cliente</div><div class="email">cliente@email.com</div></div>
+    </div>
+    <nav>
+      <a href="cliente-home.html"><span class="icon">🏠</span> Início</a>
+      <a href="dashboard-cliente.html"><span class="icon">📊</span> Dashboard</a>
+      <a href="meus-animais.html"><span class="icon">🐾</span> Meus Animais</a>
+      <a href="meus-exames.html"><span class="icon">🧪</span> Meus Exames</a>
+      <a href="historico.html"><span class="icon">📜</span> Histórico</a>
+      <a href="chat-cliente.html"><span class="icon">💬</span> Chat</a>
+      <a href="perfil.html"><span class="icon">👤</span> Perfil</a>
+    </nav>
+    <div class="menu-footer">
+      <a class="logout" href="../index.html">Sair</a>
+    </div>
+  </aside>
+
+  <div class="container">
+    <header class="header">
+      <div class="brand"><div class="logo"><img src="../assets/pet-placeholder.png" alt="" style="width:36px"></div><h1>Histórico</h1></div>
+      <div class="header-controls">
+        <button class="theme-toggle" onclick="toggleTheme()">Tema</button>
+        <button class="hamburger" onclick="openSideMenu()">≡</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <h2>Histórico de Consultas</h2>
+        <div id="historicoList"></div>
+      </section>
+    </main>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const consultas = carregarLS('consultas');
+  const area = document.getElementById('historicoList');
+  if(consultas.length===0){ area.innerHTML = '<div class="small">Nenhuma consulta.</div>'; return; }
+  consultas.forEach(c=>{
+    const d=document.createElement('div'); d.className='card';
+    d.innerHTML = `<b>${c.animal}</b><div class="small">Veterinário: ${c.vet}</div><div class="small">Data: ${c.data} ${c.hora}</div>`;
+    area.appendChild(d);
+  });
+});
+</script>
+</body>
+</html>
