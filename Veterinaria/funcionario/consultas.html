@@ -5,6 +5,17 @@
     <title>Consultas</title>
     <link rel="stylesheet" href="../style.css">
 </head>
+<script>
+function toggleTheme(){
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark");
+}
+</script>
+
 <body>
 
 <header><h1>Agendamento de Consultas</h1></header>
