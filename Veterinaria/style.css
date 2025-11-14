@@ -1,5 +1,36 @@
 /* ========================
-        ESTILO GLOBAL
+     VARIÁVEIS DO TEMA
+======================== */
+
+:root {
+    --bg: #f0f4f6;
+    --card: #ffffff;
+    --text: #222;
+    --header-bg: #2c7a7b;
+    --nav-bg: #225e5f;
+    --nav-hover: #1f4b4d;
+    --input-bg: #fff;
+    --chat-bg: #f7f7f7;
+    --msg: #d1f3f1;
+    --msg-mine: #bfe3ff;
+}
+
+/* Tema Escuro */
+body.dark {
+    --bg: #121212;
+    --card: #1f1f1f;
+    --text: #e5e5e5;
+    --header-bg: #0b3a3b;
+    --nav-bg: #0c4d4e;
+    --nav-hover: #063334;
+    --input-bg: #1d1d1d;
+    --chat-bg: #1a1a1a;
+    --msg: #144b4e;
+    --msg-mine: #1c3e63;
+}
+
+/* ========================
+         GLOBAL
 ======================== */
 * {
     margin: 0;
@@ -9,26 +40,46 @@
 }
 
 body {
-    background: #f0f4f6;
-    color: #333;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
 }
 
-/* ========================
-      CABEÇALHO
-======================== */
 header {
-    background: linear-gradient(90deg, #2c7a7b, #1e4e4f);
+    background: var(--header-bg);
     padding: 25px;
-    color: white;
     text-align: center;
+    color: white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 /* ========================
-       MENU SUPERIOR
+      BOTÃO DO TEMA
+======================== */
+.theme-toggle {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+body.dark .theme-toggle {
+    background: #333;
+    color: white;
+}
+
+/* ========================
+         NAV
 ======================== */
 nav {
-    background: #225e5f;
+    background: var(--nav-bg);
     padding: 14px;
     display: flex;
     justify-content: center;
@@ -46,11 +97,11 @@ nav a {
 }
 
 nav a:hover {
-    background: #1f4b4d;
+    background: var(--nav-hover);
 }
 
 /* ========================
-        CONTAINER
+        CARDS
 ======================== */
 .container {
     max-width: 1000px;
@@ -58,37 +109,17 @@ nav a:hover {
     padding: 35px 20px;
 }
 
-/* ========================
-         CARDS
-======================== */
 .card {
-    background: white;
+    background: var(--card);
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.10);
     margin-bottom: 25px;
+    transition: 0.3s;
 }
 
 /* ========================
-       BOTÕES
-======================== */
-button {
-    padding: 12px 25px;
-    background: #2c7a7b;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: #1e5b5c;
-}
-
-/* ========================
-       FORMULÁRIOS
+        FORMULÁRIOS
 ======================== */
 input, select, textarea {
     width: 100%;
@@ -97,39 +128,41 @@ input, select, textarea {
     margin-bottom: 15px;
     border: 1px solid #aaa;
     border-radius: 8px;
-    background: #fff;
+    background: var(--input-bg);
+    color: var(--text);
 }
 
 /* ========================
-            CHAT
+          CHAT
 ======================== */
 .chat-box {
     max-width: 650px;
     margin: auto;
     padding: 20px;
-    background: white;
+    background: var(--card);
     border-radius: 12px;
 }
 
 .chat-window {
     height: 350px;
     overflow-y: auto;
-    border: 1px solid #ccc;
+    border: 1px solid #444;
     padding: 15px;
     border-radius: 10px;
-    background: #f7f7f7;
+    background: var(--chat-bg);
 }
 
 .msg {
     padding: 10px 15px;
     border-radius: 8px;
     margin-bottom: 10px;
-    background: #d1f3f1;
+    background: var(--msg);
     max-width: 75%;
+    color: white;
 }
 
 .msg.mine {
-    background: #bfe3ff;
+    background: var(--msg-mine);
     margin-left: auto;
 }
 
@@ -156,7 +189,8 @@ input, select, textarea {
         padding: 18px;
     }
 
-    .chat-box {
-        margin: 15px;
+    .theme-toggle {
+        top: 15px;
+        right: 15px;
     }
 }
