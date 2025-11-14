@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Chat Cliente</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../script-global.js" defer></script>
+</head>
+<body class="client">
+  <div class="side-menu-overlay" onclick="closeSideMenu()"></div>
+  <aside class="side-menu" aria-hidden="true">
+    <div class="menu-header">
+      <div class="avatar"><img src="../assets/pet-placeholder.png" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="menu-user"><div class="name">João Cliente</div><div class="email">cliente@email.com</div></div>
+    </div>
+    <nav>
+      <a href="cliente-home.html"><span class="icon">🏠</span> Início</a>
+      <a href="dashboard-cliente.html"><span class="icon">📊</span> Dashboard</a>
+      <a href="meus-animais.html"><span class="icon">🐾</span> Meus Animais</a>
+      <a href="meus-exames.html"><span class="icon">🧪</span> Meus Exames</a>
+      <a href="historico.html"><span class="icon">📜</span> Histórico</a>
+      <a href="chat-cliente.html"><span class="icon">💬</span> Chat</a>
+      <a href="perfil.html"><span class="icon">👤</span> Perfil</a>
+    </nav>
+    <div class="menu-footer">
+      <a class="logout" href="../index.html">Sair</a>
+    </div>
+  </aside>
+
+  <div class="container">
+    <header class="header">
+      <div class="brand"><div class="logo"><img src="../assets/pet-placeholder.png" alt="" style="width:36px"></div><h1>Chat</h1></div>
+      <div class="header-controls">
+        <button class="theme-toggle" onclick="toggleTheme()">Tema</button>
+        <button class="hamburger" onclick="openSideMenu()">≡</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="chat-box">
+        <div id="janelaChat" class="chat-window"></div>
+        <form id="formChat">
+          <input id="msgCliente" placeholder="Escreva sua mensagem..." required>
+          <button class="action-btn" type="submit">Enviar</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+<script>
+function carregarChatCliente(){
+  const chat = carregarLS('chat');
+  const janela = document.getElementById('janelaChat');
+  janela.innerHTML = '';
+  chat.forEach(m=>{
+    const div = document.createElement('div');
+    div.className = 'msg ' + (m.quem==='cliente' ? 'client' : 'mine');
+    div.textContent = m.texto;
+    janela.appendChild(div);
+  });
+  janela.scrollTop = janela.scrollHeight;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  carregarChatCliente();
+  document.getElementById('formChat').addEventListener('submit',e=>{
+    e.preventDefault();
+    const txt = document.getElementById('msgCliente').value.trim();
+    if(!txt) return;
+    salvarMensagem('chat',{id:Date.now(),quem:'cliente',texto:txt});
+    carregarChatCliente();
+    e.target.reset();
+  });
+});
+</script>
+</body>
+</html>
