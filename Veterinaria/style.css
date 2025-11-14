@@ -1,0 +1,162 @@
+/* ========================
+        ESTILO GLOBAL
+======================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: #f0f4f6;
+    color: #333;
+}
+
+/* ========================
+      CABEÇALHO
+======================== */
+header {
+    background: linear-gradient(90deg, #2c7a7b, #1e4e4f);
+    padding: 25px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ========================
+       MENU SUPERIOR
+======================== */
+nav {
+    background: #225e5f;
+    padding: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+nav a:hover {
+    background: #1f4b4d;
+}
+
+/* ========================
+        CONTAINER
+======================== */
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 35px 20px;
+}
+
+/* ========================
+         CARDS
+======================== */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+    margin-bottom: 25px;
+}
+
+/* ========================
+       BOTÕES
+======================== */
+button {
+    padding: 12px 25px;
+    background: #2c7a7b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #1e5b5c;
+}
+
+/* ========================
+       FORMULÁRIOS
+======================== */
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 15px;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    background: #fff;
+}
+
+/* ========================
+            CHAT
+======================== */
+.chat-box {
+    max-width: 650px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+}
+
+.chat-window {
+    height: 350px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f7f7f7;
+}
+
+.msg {
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: #d1f3f1;
+    max-width: 75%;
+}
+
+.msg.mine {
+    background: #bfe3ff;
+    margin-left: auto;
+}
+
+/* ========================
+        RESPONSIVO
+======================== */
+@media (max-width: 600px) {
+
+    nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    nav a {
+        padding: 10px;
+        font-size: 17px;
+    }
+
+    header h1 {
+        font-size: 22px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .chat-box {
+        margin: 15px;
+    }
+}
