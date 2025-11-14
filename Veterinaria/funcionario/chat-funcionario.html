@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Chat Funcionário</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../script-global.js" defer></script>
+</head>
+<body class="employee">
+  <div class="side-menu-overlay" onclick="closeSideMenu()"></div>
+  <aside class="side-menu" aria-hidden="true">
+    <div class="menu-header">
+      <div class="avatar"><img src="../assets/pet-placeholder.png" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="menu-user"><div class="name">Ana Veterinária</div><div class="email">vet@clinica.com</div></div>
+    </div>
+    <nav>
+      <a href="funcionario-home.html"><span class="icon">🏢</span> Início</a>
+      <a href="dashboard-funcionario.html"><span class="icon">📊</span> Dashboard</a>
+      <a href="cadastros.html"><span class="icon">🧾</span> Cadastros</a>
+      <a href="consultas.html"><span class="icon">🩺</span> Consultas</a>
+      <a href="exames.html"><span class="icon">🧪</span> Exames</a>
+      <a href="chat-funcionario.html"><span class="icon">💬</span> Chat Interno</a>
+      <a href="perfil-funcionario.html"><span class="icon">👤</span> Perfil</a>
+    </nav>
+    <div class="menu-footer">
+      <a class="logout" href="../index.html">Sair</a>
+    </div>
+  </aside>
+
+  <div class="container">
+    <header class="header">
+      <div class="brand"><div class="logo"><img src="../assets/pet-placeholder.png" alt="" style="width:36px"></div><h1>Chat Interno</h1></div>
+      <div class="header-controls">
+        <button class="theme-toggle" onclick="toggleTheme()">Tema</button>
+        <button class="hamburger" onclick="openSideMenu()">≡</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="chat-box">
+        <div id="janelaChatFunc" class="chat-window"></div>
+        <form id="formChatFunc">
+          <input id="msgFunc" placeholder="Mensagem interna..." required>
+          <button class="action-btn" type="submit">Enviar</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+<script>
+function carregarChatFunc(){
+  const chat = carregarLS('chat');
+  const janela = document.getElementById('janelaChatFunc');
+  janela.innerHTML = '';
+  chat.forEach(m=>{
+    const div = document.createElement('div');
+    div.className = 'msg ' + (m.quem==='funcionario' ? 'mine' : 'client');
+    div.textContent = m.texto;
+    janela.appendChild(div);
+  });
+  janela.scrollTop = janela.scrollHeight;
+}
+document.addEventListener('DOMContentLoaded', ()=>{
+  carregarChatFunc();
+  document.getElementById('formChatFunc').addEventListener('submit', e=>{
+    e.preventDefault();
+    const txt = document.getElementById('msgFunc').value.trim();
+    if(!txt) return;
+    salvarMensagem('chat',{id:Date.now(),quem:'funcionario',texto:txt});
+    carregarChatFunc();
+    e.target.reset();
+  });
+});
+</script>
+</body>
+</html>
