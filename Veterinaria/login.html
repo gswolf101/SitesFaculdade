@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header><h1>Login</h1></header>
+
+<div class="container">
+    <div class="card" style="max-width: 450px; margin:auto;">
+        <h2>Acessar Sistema</h2>
+
+        <form id="loginForm">
+            <label>Email</label>
+            <input type="email">
+
+            <label>Senha</label>
+            <input type="password">
+
+            <label style="display:flex;gap:8px;align-items:center;">
+                <input type="checkbox" id="func">
+                Sou Funcionário
+            </label>
+
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    if(document.getElementById("func").checked){
+        window.location.href = "funcionario/funcionario-home.html";
+    } else {
+        window.location.href = "cliente/cliente-home.html";
+    }
+});
+</script>
+
+</body>
+</html>
