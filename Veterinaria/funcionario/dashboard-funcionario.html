@@ -1,46 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard Funcionário</title>
-    <link rel="stylesheet" href="../style.css">
+  <meta charset="utf-8">
+  <title>Dashboard Funcionário</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../script-global.js" defer></script>
 </head>
-<script>
-function toggleTheme(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-}
-
-if(localStorage.getItem("theme") === "dark"){
-    document.body.classList.add("dark");
-}
-</script>
-
-<body>
-
-<header><h1>Dashboard do Funcionário</h1></header>
-<button class="theme-toggle" onclick="toggleTheme()">🌙 Tema</button>
-
-<nav>
-    <a href="funcionario-home.html">Início</a>
-    <a href="dashboard-funcionario.html">Dashboard</a>
-    <a href="cadastros.html">Cadastros</a>
-    <a href="consultas.html">Consultas</a>
-    <a href="exames.html">Exames</a>
-    <a href="chat-funcionario.html">Chat</a>
-    <a href="perfil-funcionario.html">Perfil</a>
-</nav>
-
-<div class="container">
-
-    <div class="card">
-        <h2>Resumo</h2>
-        <p><b>Consultas agendadas hoje:</b> 5</p>
-        <p><b>Exames pendentes:</b> 3</p>
-        <p><b>Clientes cadastrados:</b> 42</p>
+<body class="employee">
+  <div class="side-menu-overlay" onclick="closeSideMenu()"></div>
+  <aside class="side-menu" aria-hidden="true">
+    <div class="menu-header">
+      <div class="avatar"><img src="../assets/pet-placeholder.png" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="menu-user"><div class="name">Ana Veterinária</div><div class="email">vet@clinica.com</div></div>
     </div>
+    <nav>
+      <a href="funcionario-home.html"><span class="icon">🏢</span> Início</a>
+      <a href="dashboard-funcionario.html"><span class="icon">📊</span> Dashboard</a>
+      <a href="cadastros.html"><span class="icon">🧾</span> Cadastros</a>
+      <a href="consultas.html"><span class="icon">🩺</span> Consultas</a>
+      <a href="exames.html"><span class="icon">🧪</span> Exames</a>
+      <a href="chat-funcionario.html"><span class="icon">💬</span> Chat Interno</a>
+      <a href="perfil-funcionario.html"><span class="icon">👤</span> Perfil</a>
+    </nav>
+    <div class="menu-footer">
+      <a class="logout" href="../index.html">Sair</a>
+    </div>
+  </aside>
 
-</div>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><div class="logo"><img src="../assets/pet-placeholder.png" alt="" style="width:36px"></div><h1>Dashboard</h1></div>
+      <div class="header-controls">
+        <button class="theme-toggle" onclick="toggleTheme()">Tema</button>
+        <button class="hamburger" onclick="openSideMenu()">≡</button>
+      </div>
+    </header>
 
+    <main>
+      <section class="panel">
+        <h2>Resumo Operacional</h2>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+          <div class="card"><b>Consultas hoje:</b> <span id="qtdConsultas">0</span></div>
+          <div class="card"><b>Exames pendentes:</b> <span id="qtdExames">0</span></div>
+          <div class="card"><b>Clientes totais:</b> <span id="qtdAnimais">0</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('qtdConsultas').innerText = carregarLS('consultas').length;
+  document.getElementById('qtdExames').innerText = carregarLS('exames').length;
+  document.getElementById('qtdAnimais').innerText = carregarLS('cadastros').length;
+});
+</script>
 </body>
 </html>
