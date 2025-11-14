@@ -1,252 +1,377 @@
-/* style.css - tema cliente (blobs) + variante formal para funcionários */
+/* ============================================================
+   BASE THEME (Client + Employee Variant)
+   ============================================================ */
 
-/* ======= Variáveis comuns ======= */
-:root{
-  --bg: #ffffff;
-  --card: #f2f2f2;
-  --muted: #9aa0a6;
-  --text: #0b0b0b;
-  --accent: #111111;
-  --btn-bg: #000000;
-  --btn-text: #ffffff;
-  --radius-lg: 26px;
-  --radius-md: 14px;
-  --shadow: 0 6px 18px rgba(16,24,40,0.08);
-  --glass: rgba(255,255,255,0.6);
+/* ---------- CSS Variables ---------- */
+:root {
+    --bg: #ffffff;
+    --card: #f2f2f2;
+    --muted: #9aa0a6;
+    --text: #0b0b0b;
+    --accent: #111111;
+    --btn-bg: #000000;
+    --btn-text: #ffffff;
+
+    --radius-lg: 26px;
+    --radius-md: 14px;
+
+    --shadow: 0 6px 18px rgba(16, 24, 40, 0.08);
+    --glass: rgba(255,255,255,0.6);
+
+    --transition: 0.25s ease;
 }
 
-/* ======= Employee (formal) variant ======= */
+/* ---------- Employee Variant ---------- */
 body.employee {
-  --card: #ffffff;
-  --muted: #6c757d;
-  --text: #0f1720;
-  --accent: #0b3a3b;
-  --btn-bg: #0b3a3b;
-  --btn-text: #ffffff;
-  --radius-lg: 12px;
-  --radius-md: 8px;
-  --shadow: 0 6px 18px rgba(4,12,20,0.08);
+    --card: #ffffff;
+    --muted: #6c757d;
+    --text: #0f1720;
+    --accent: #0b3a3b;
+    --btn-bg: #0b3a3b;
+    --btn-text: #ffffff;
+
+    --radius-lg: 12px;
+    --radius-md: 8px;
+
+    --shadow: 0 6px 18px rgba(4, 12, 20, 0.08);
 }
 
-/* ======= Dark mode support (keeps look) ======= */
+/* ---------- Dark Mode ---------- */
 body.dark {
-  --card: #1b1b1b;
-  --text: #e8eef1;
-  --muted: #9aa0a6;
-  --btn-bg: #0b3a3b;
+    --card: #1b1b1b;
+    --text: #e8eef1;
+    --muted: #9aa0a6;
+    --btn-bg: #0b3a3b;
 }
 
-/* ======= Reset & base ======= */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: "Inter", "Segoe UI", Arial, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  transition:background .25s,color .25s;
+/* ============================================================
+   RESET + BASE
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
 }
 
-/* ======= Client background blobs (apply when body has class "client") ======= */
-body.client{
-  background: linear-gradient(180deg,#fff 0%, #fff 30%);
-  position:relative;
-  overflow-x:hidden;
+html, body {
+    height: 100%;
 }
 
-/* decorative blobs */
+body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background var(--transition), color var(--transition);
+}
+
+/* ============================================================
+   CLIENT THEME — BLOBS
+   ============================================================ */
+
+body.client {
+    background: linear-gradient(180deg, #fff 0%, #fff 30%);
+    position: relative;
+    overflow-x: hidden;
+}
+
 body.client::before,
-body.client::after{
-  content:"";
-  position:fixed;
-  z-index:0;
-  pointer-events:none;
-  border-radius:50%;
+body.client::after {
+    content: "";
+    position: fixed;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 0;
+    opacity: 0.9;
 }
 
-/* top-right grey blob */
-body.client::before{
-  width:420px;
-  height:320px;
-  right:-80px;
-  top:-60px;
-  background: #9aa0a6; /* grey */
-  transform: rotate(-10deg);
-  opacity:0.9;
+/* Top-right blob */
+body.client::before {
+    width: 420px;
+    height: 320px;
+    right: -80px;
+    top: -60px;
+    background: #9aa0a6;
+    transform: rotate(-10deg);
 }
 
-/* left-bottom peach blob */
-body.client::after{
-  width:520px;
-  height:520px;
-  left:-150px;
-  bottom:-120px;
-  background: #f6b98b; /* peach */
-  opacity:0.95;
+/* Bottom-left blob */
+body.client::after {
+    width: 520px;
+    height: 520px;
+    left: -150px;
+    bottom: -120px;
+    background: #f6b98b;
+    opacity: 0.95;
 }
 
-/* container sizing */
-.container{
-  max-width:980px;
-  margin:20px auto;
-  padding:18px;
-  position:relative;
-  z-index:2;
+/* ============================================================
+   STRUCTURE
+   ============================================================ */
+
+.container {
+    max-width: 980px;
+    margin: 20px auto;
+    padding: 18px;
+    position: relative;
+    z-index: 2;
 }
 
-/* header */
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:14px;
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    gap: 12px;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.brand .logo{
-  width:56px;height:56px;border-radius:50%;
-  background:var(--card); display:flex;align-items:center;justify-content:center;
-  box-shadow: var(--shadow);
-}
-.brand h1{font-size:28px;margin:0;font-weight:800;letter-spacing:-1px}
-
-/* hamburger */
-.hamburger{
-  width:44px;height:44px;border-radius:8px;background:var(--card);display:flex;align-items:center;justify-content:center;
-  box-shadow: var(--shadow);
+/* Logo + brand */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-/* big rounded panel that appears in sketch */
-.panel{
-  background:var(--card);
-  border-radius: var(--radius-lg);
-  padding:20px;
-  box-shadow: var(--shadow);
+.brand .logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
 }
 
-/* title inside panel */
-.panel h2{font-size:28px;margin:6px 0 16px;font-weight:800}
-
-/* pet item */
-.pet-item{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  background: #fff;
-  border-radius: 18px;
-  padding:12px;
-  border:1px solid rgba(0,0,0,0.03);
-  box-shadow: 0 4px 10px rgba(10,10,10,0.03);
+.brand h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
 }
 
-.pet-avatar{
-  width:64px;height:64px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 6px 14px rgba(0,0,0,0.08)
-}
-.pet-name{font-size:20px;font-weight:700}
-
-/* add pet CTA (big pill) */
-.btn-pill{
-  display:block;
-  width:100%;
-  text-align:center;
-  padding:20px;
-  margin-top:14px;
-  background:var(--glass);
-  color:var(--muted);
-  font-size:26px;
-  font-weight:700;
-  border-radius:20px;
-  border:1px solid rgba(0,0,0,0.03);
+.hamburger {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
 }
 
-/* search style from sketch */
-.search{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:16px 20px;
-  border-radius:30px;
-  border:6px solid #000;
-  background: #fff;
-  font-size:18px;
-  height:64px;
+/* ============================================================
+   PANELS / CARDS
+   ============================================================ */
+
+.panel {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow);
 }
 
-/* huge black action buttons like sketch */
-.action-list{display:flex;flex-direction:column;gap:18px;margin-top:18px}
-
-.action-btn{
-  background:var(--btn-bg);
-  color:var(--btn-text);
-  border-radius:22px;
-  padding:20px;
-  font-size:20px;
-  font-weight:800;
-  text-align:center;
-  box-shadow:var(--shadow);
-  border:0;
+.panel h2 {
+    font-size: 28px;
+    margin: 6px 0 16px;
+    font-weight: 800;
 }
 
-/* purple rounded back button in sketch bottom */
-.btn-back{
-  margin:34px auto 0;
-  display:inline-block;
-  padding:24px 36px;
-  border-radius:40px;
-  background:#6f4bb0;
-  color:#fff;
-  font-size:20px;
-  font-weight:700;
-  text-align:center;
+/* ============================================================
+   PET ITEM
+   ============================================================ */
+
+.pet-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    padding: 12px;
+    border-radius: 18px;
+    border: 1px solid rgba(0,0,0,0.03);
+    box-shadow: 0 4px 10px rgba(10,10,10,0.03);
 }
 
-/* CHAT area (client uses same soft look) */
-.chat-box{
-  max-width:700px;
-  margin:12px auto;
-  padding:14px;
-  background:var(--card);
-  border-radius:18px;
-  box-shadow:var(--shadow);
-}
-.chat-window{
-  height:360px;
-  overflow:auto;
-  background:var(--bg);
-  padding:12px;border-radius:12px;
-}
-.msg{padding:12px 16px;border-radius:14px;margin-bottom:12px;max-width:78%}
-.msg.client{background:var(--msg-client, #d1f3f1);color:#000}
-.msg.mine{background:var(--msg-func, #bfe3ff);margin-left:auto;color:#000}
-
-/* FORM elements */
-label{display:block;margin-bottom:6px;color:var(--muted);font-weight:600}
-input,select,textarea{
-  width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);background: #fff;
-  font-size:15px;margin-bottom:12px;
+.pet-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #fff;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
 }
 
-/* smaller helper text */
-.small{font-size:13px;color:var(--muted)}
-
-/* ===== responsive tweaks ===== */
-@media(min-width:900px){
-  .container{padding:40px}
-  .panel{padding:28px}
-  .pet-avatar{width:72px;height:72px}
-  .search{height:72px;font-size:20px}
+.pet-name {
+    font-size: 20px;
+    font-weight: 700;
 }
 
-/* ====== Employee specific adjustments via body.employee ====== */
-/* when body has .employee keep more formal layout */
-body.employee .panel{border-radius:12px}
-body.employee .pet-item{border-radius:8px;padding:10px;background:var(--card)}
-body.employee .action-btn{border-radius:8px;padding:12px;font-weight:700}
-body.employee .brand h1{font-size:20px;font-weight:700}
+/* Add pet button */
+.btn-pill {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    margin-top: 14px;
+    background: var(--glass);
+    color: var(--muted);
+    font-size: 26px;
+    font-weight: 700;
+    border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+
+.search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border: 6px solid #000;
+    border-radius: 30px;
+    background: #fff;
+    height: 64px;
+    font-size: 18px;
+}
+
+/* ============================================================
+   ACTION BUTTONS
+   ============================================================ */
+
+.action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.action-btn {
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-radius: 22px;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 800;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: none;
+}
+
+.btn-back {
+    margin: 34px auto 0;
+    display: inline-block;
+    padding: 24px 36px;
+    background: #6f4bb0;
+    color: #fff;
+    border-radius: 40px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* ============================================================
+   CHAT
+   ============================================================ */
+
+.chat-box {
+    max-width: 700px;
+    margin: 12px auto;
+    padding: 14px;
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+.chat-window {
+    height: 360px;
+    overflow: auto;
+    background: var(--bg);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.msg {
+    padding: 12px 16px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    max-width: 78%;
+}
+
+.msg.client {
+    background: #d1f3f1;
+    color: #000;
+}
+
+.msg.mine {
+    background: #bfe3ff;
+    margin-left: auto;
+    color: #000;
+}
+
+/* ============================================================
+   FORMS
+   ============================================================ */
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    background: #fff;
+    font-size: 15px;
+}
+
+.small {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (min-width: 900px) {
+    .container { padding: 40px; }
+    .panel { padding: 28px; }
+    .pet-avatar { width: 72px; height: 72px; }
+    .search { height: 72px; font-size: 20px; }
+}
+
+/* ============================================================
+   EMPLOYEE MODE REFINEMENTS
+   ============================================================ */
+
+body.employee .panel {
+    border-radius: 12px;
+}
+
+body.employee .pet-item {
+    padding: 10px;
+    border-radius: 8px;
+    background: var(--card);
+}
+
+body.employee .action-btn {
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 700;
+}
+
+body.employee .brand h1 {
+    font-size: 20px;
+    font-weight: 700;
+}
