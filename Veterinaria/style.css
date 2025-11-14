@@ -1,196 +1,251 @@
-/* ========================
-     VARIÁVEIS DO TEMA
-======================== */
+/* ==========================
+      VARIÁVEIS DO TEMA
+========================== */
 
 :root {
-    --bg: #f0f4f6;
+    --bg: #f4f7f9;
+    --bg-alt: #e9eef2;
     --card: #ffffff;
-    --text: #222;
-    --header-bg: #2c7a7b;
-    --nav-bg: #225e5f;
-    --nav-hover: #1f4b4d;
-    --input-bg: #fff;
-    --chat-bg: #f7f7f7;
-    --msg: #d1f3f1;
-    --msg-mine: #bfe3ff;
+    --text: #2c3e50;
+    --text-light: #6b8196;
+    --primary: #2c7a7b;
+    --primary-dark: #1f5c5d;
+    --border: #d0d6dd;
+    --input: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.08);
+
+    --chat-bg: #eef2f4;
+    --msg-client: #d1f3f1;
+    --msg-func: #bfe3ff;
 }
 
-/* Tema Escuro */
+/* Tema escuro */
 body.dark {
     --bg: #121212;
-    --card: #1f1f1f;
-    --text: #e5e5e5;
-    --header-bg: #0b3a3b;
-    --nav-bg: #0c4d4e;
-    --nav-hover: #063334;
-    --input-bg: #1d1d1d;
-    --chat-bg: #1a1a1a;
-    --msg: #144b4e;
-    --msg-mine: #1c3e63;
+    --bg-alt: #1b1b1b;
+    --card: #1e1e1e;
+    --text: #ececec;
+    --text-light: #9aa4ad;
+    --primary: #3ccccc;
+    --primary-dark: #2db0b0;
+    --border: #2d2d2d;
+    --input: #222;
+    --shadow: rgba(0, 0, 0, 0.45);
+
+    --chat-bg: #202020;
+    --msg-client: #144b4e;
+    --msg-func: #1c3e63;
 }
 
-/* ========================
-         GLOBAL
-======================== */
+/* ==========================
+         BASE GLOBAL
+========================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: "Inter", Arial, sans-serif;
 }
 
 body {
     background: var(--bg);
     color: var(--text);
-    transition: background 0.3s, color 0.3s;
+    transition: 0.25s ease-in-out;
 }
 
+h1, h2, h3 {
+    letter-spacing: -0.5px;
+    font-weight: 600;
+}
+
+p {
+    color: var(--text-light);
+}
+
+/* ==========================
+           HEADER
+========================== */
 header {
-    background: var(--header-bg);
-    padding: 25px;
-    text-align: center;
+    background: var(--primary);
+    padding: 25px 20px;
     color: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    text-align: center;
+    font-size: 22px;
+    box-shadow: 0 2px 8px var(--shadow);
+    position: relative;
 }
 
-/* ========================
-      BOTÃO DO TEMA
-======================== */
+/* Botão tema */
 .theme-toggle {
     position: absolute;
     right: 20px;
-    top: 20px;
-    background: #fff;
+    top: 18px;
+    background: var(--card);
+    color: var(--text);
     border: none;
     padding: 10px 18px;
     border-radius: 8px;
-    font-size: 14px;
     cursor: pointer;
     font-weight: bold;
     transition: 0.2s;
 }
-
-body.dark .theme-toggle {
-    background: #333;
-    color: white;
+.theme-toggle:hover {
+    filter: brightness(0.9);
 }
 
-/* ========================
-         NAV
-======================== */
+/* ==========================
+              NAV
+========================== */
+
 nav {
-    background: var(--nav-bg);
-    padding: 14px;
+    background: var(--card);
+    padding: 15px;
     display: flex;
     justify-content: center;
-    gap: 25px;
+    gap: 22px;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 6px var(--shadow);
     flex-wrap: wrap;
 }
 
 nav a {
-    color: white;
-    font-weight: bold;
     text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
     padding: 8px 14px;
     border-radius: 6px;
     transition: 0.2s;
 }
 
 nav a:hover {
-    background: var(--nav-hover);
+    background: var(--primary);
+    color: white;
 }
 
-/* ========================
-        CARDS
-======================== */
+/* ==========================
+           CONTAINER
+========================== */
 .container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: auto;
-    padding: 35px 20px;
+    padding: 40px 20px;
 }
 
+/* ==========================
+              CARD
+========================== */
 .card {
     background: var(--card);
     padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+    border-radius: 14px;
+    box-shadow: 0px 4px 12px var(--shadow);
     margin-bottom: 25px;
-    transition: 0.3s;
+    border: 1px solid var(--border);
+    transition: 0.2s;
 }
 
-/* ========================
-        FORMULÁRIOS
-======================== */
+.card:hover {
+    transform: translateY(-3px);
+}
+
+/* ==========================
+         FORMULÁRIOS
+========================== */
 input, select, textarea {
     width: 100%;
-    padding: 12px;
-    margin-top: 6px;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
     margin-bottom: 15px;
-    border: 1px solid #aaa;
-    border-radius: 8px;
-    background: var(--input-bg);
+    background: var(--input);
     color: var(--text);
+    transition: 0.2s;
 }
 
-/* ========================
-          CHAT
-======================== */
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* ==========================
+            BOTÕES
+========================== */
+button {
+    padding: 14px 24px;
+    background: var(--primary);
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+button:hover {
+    background: var(--primary-dark);
+}
+
+/* ==========================
+              CHAT
+========================== */
 .chat-box {
-    max-width: 650px;
+    max-width: 700px;
     margin: auto;
-    padding: 20px;
     background: var(--card);
-    border-radius: 12px;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    box-shadow: 0px 4px 12px var(--shadow);
 }
 
 .chat-window {
-    height: 350px;
+    height: 420px;
     overflow-y: auto;
-    border: 1px solid #444;
-    padding: 15px;
-    border-radius: 10px;
+    padding: 18px;
     background: var(--chat-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 15px;
 }
 
 .msg {
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    background: var(--msg);
+    background: var(--msg-client);
+    padding: 12px 18px;
+    border-radius: 14px;
+    margin-bottom: 12px;
     max-width: 75%;
     color: white;
 }
 
 .msg.mine {
-    background: var(--msg-mine);
+    background: var(--msg-func);
     margin-left: auto;
 }
 
-/* ========================
-        RESPONSIVO
-======================== */
+/* ==========================
+          RESPONSIVO
+========================== */
 @media (max-width: 600px) {
-
     nav {
         flex-direction: column;
         gap: 10px;
     }
 
-    nav a {
-        padding: 10px;
-        font-size: 17px;
+    header {
+        font-size: 18px;
+        padding: 18px;
     }
 
-    header h1 {
-        font-size: 22px;
+    .theme-toggle {
+        top: 10px;
+        right: 10px;
     }
 
     .card {
         padding: 18px;
     }
 
-    .theme-toggle {
-        top: 15px;
-        right: 15px;
+    button {
+        width: 100%;
     }
 }
