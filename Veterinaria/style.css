@@ -1,377 +1,251 @@
-/* ============================================================
-   BASE THEME (Client + Employee Variant)
-   ============================================================ */
+/* style.css — refeito para o protótipo UNIPet
+   - blobs (client)
+   - menu lateral avançado (vindo da direita, 80%)
+   - tema claro / escuro (transição)
+   - classes esperadas: body.client, .container, .header, .brand, .panel, .action-btn, .pet-item, etc.
+*/
 
-/* ---------- CSS Variables ---------- */
-:root {
-    --bg: #ffffff;
-    --card: #f2f2f2;
-    --muted: #9aa0a6;
-    --text: #0b0b0b;
-    --accent: #111111;
-    --btn-bg: #000000;
-    --btn-text: #ffffff;
-
-    --radius-lg: 26px;
-    --radius-md: 14px;
-
-    --shadow: 0 6px 18px rgba(16, 24, 40, 0.08);
-    --glass: rgba(255,255,255,0.6);
-
-    --transition: 0.25s ease;
+/* -------------------------
+   Variáveis (light default)
+   -------------------------*/
+:root{
+  --bg: #ffffff;
+  --surface: #f7f8fa;
+  --card: #ffffff;
+  --muted: #8b97a3;
+  --text: #0f1720;
+  --accent: #111111;
+  --primary: #0b3a3b;       /* employee primary, used sparingly */
+  --black-btn: #0b0b0b;
+  --white: #ffffff;
+  --glass: rgba(255,255,255,0.72);
+  --radius-lg: 26px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow-lg: 0 12px 30px rgba(10,20,30,0.08);
+  --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
+  --transition: 0.22s ease;
 }
 
-/* ---------- Employee Variant ---------- */
-body.employee {
-    --card: #ffffff;
-    --muted: #6c757d;
-    --text: #0f1720;
-    --accent: #0b3a3b;
-    --btn-bg: #0b3a3b;
-    --btn-text: #ffffff;
-
-    --radius-lg: 12px;
-    --radius-md: 8px;
-
-    --shadow: 0 6px 18px rgba(4, 12, 20, 0.08);
+/* Dark theme overrides (applied when body.dark) */
+body.dark{
+  --bg: #0b0f12;
+  --surface: #0f1315;
+  --card: #121416;
+  --muted: #9aa4ad;
+  --text: #e6eef2;
+  --black-btn: #0b3a3b;
+  --glass: rgba(255,255,255,0.04);
+  --shadow-lg: 0 14px 36px rgba(0,0,0,0.6);
 }
 
-/* ---------- Dark Mode ---------- */
-body.dark {
-    --card: #1b1b1b;
-    --text: #e8eef1;
-    --muted: #9aa0a6;
-    --btn-bg: #0b3a3b;
+/* Employee variant (keeps a more formal system) */
+body.employee{
+  --primary: #0b3a3b;
+  --black-btn: #0b3a3b;
+  --radius-lg: 12px;
 }
 
-/* ============================================================
-   RESET + BASE
-   ============================================================ */
-
-* {
-    box-sizing: border-box;
+/* -------------------------
+   Reset / Base
+   -------------------------*/
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg,var(--bg) 0%, var(--surface) 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  transition: background var(--transition), color var(--transition);
+  position:relative;
 }
 
-html, body {
-    height: 100%;
+/* ensure client blobs are above background but behind content */
+body.client{
+  overflow-x:hidden;
 }
 
-body {
-    margin: 0;
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transition: background var(--transition), color var(--transition);
-}
-
-/* ============================================================
-   CLIENT THEME — BLOBS
-   ============================================================ */
-
-body.client {
-    background: linear-gradient(180deg, #fff 0%, #fff 30%);
-    position: relative;
-    overflow-x: hidden;
-}
-
+/* blobs (decor) */
 body.client::before,
-body.client::after {
-    content: "";
-    position: fixed;
-    pointer-events: none;
-    border-radius: 50%;
-    z-index: 0;
-    opacity: 0.9;
+body.client::after{
+  content:"";
+  position:fixed;
+  z-index:0;
+  pointer-events:none;
+  border-radius:50%;
+  transition: transform .6s ease var(--transition);
+}
+body.client::before{
+  width:460px;height:340px;
+  right:-120px;top:-80px;
+  background:#9aa0a6;
+  transform: rotate(-8deg);
+  opacity:0.92;
+}
+body.client::after{
+  width:560px;height:560px;
+  left:-200px;bottom:-140px;
+  background:#f6b98b;
+  opacity:0.95;
 }
 
-/* Top-right blob */
-body.client::before {
-    width: 420px;
-    height: 320px;
-    right: -80px;
-    top: -60px;
-    background: #9aa0a6;
-    transform: rotate(-10deg);
+/* container and layout */
+.container{
+  max-width:980px;
+  margin:20px auto;
+  padding:20px;
+  position:relative;
+  z-index:2;
 }
 
-/* Bottom-left blob */
-body.client::after {
-    width: 520px;
-    height: 520px;
-    left: -150px;
-    bottom: -120px;
-    background: #f6b98b;
-    opacity: 0.95;
+/* header / brand */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+  z-index:10;
+}
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.brand .logo{
+  width:56px;height:56px;border-radius:12px;
+  background:var(--card); display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm);
+}
+.brand h1{
+  margin:0;font-size:24px;font-weight:800;letter-spacing:-0.6px;
 }
 
-/* ============================================================
-   STRUCTURE
-   ============================================================ */
-
-.container {
-    max-width: 980px;
-    margin: 20px auto;
-    padding: 18px;
-    position: relative;
-    z-index: 2;
+/* theme toggle and hamburger container */
+.header-controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.theme-toggle{
+  background:var(--glass);
+  border:1px solid rgba(0,0,0,0.04);
+  padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;
+  box-shadow:var(--shadow-sm);
+}
+.hamburger{
+  width:46px;height:46px;border-radius:10px;background:var(--card);display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm);cursor:pointer;border:0;font-size:20px;
 }
 
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-    gap: 12px;
+/* panel */
+.panel{
+  background:var(--card);
+  border-radius:var(--radius-lg);
+  padding:20px;
+  box-shadow:var(--shadow-lg);
+  border:1px solid rgba(15,20,25,0.03);
+  position:relative;
+  z-index:3;
 }
 
-/* Logo + brand */
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+/* search (sketch style) */
+.search{
+  display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:30px;background:var(--white);
+  font-size:16px;border:6px solid #000;height:64px;
 }
 
-.brand .logo {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--card);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
+/* action list and buttons */
+.action-list{display:flex;flex-direction:column;gap:16px;margin-top:16px}
+.action-btn{
+  display:block;background:var(--black-btn);color:var(--white);
+  border-radius:22px;padding:18px;font-weight:800;font-size:18px;text-align:center;border:0;cursor:pointer;
+  box-shadow:var(--shadow-sm);
+}
+.btn-back{
+  display:inline-block;margin:28px auto 0;padding:16px 28px;border-radius:40px;background:#6f4bb0;color:#fff;font-weight:800;text-align:center;
 }
 
-.brand h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -1px;
+/* pet item */
+.pet-item{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:18px;padding:12px;border:1px solid rgba(0,0,0,0.03);box-shadow:var(--shadow-sm)}
+.pet-avatar{width:64px;height:64px;border-radius:50%;overflow:hidden;flex:0 0 64px}
+.pet-name{font-weight:700;font-size:18px}
+
+/* pill CTA */
+.btn-pill{display:block;width:100%;text-align:center;padding:18px;background:var(--glass);color:var(--muted);font-size:22px;border-radius:20px;border:1px solid rgba(0,0,0,0.03);font-weight:800}
+
+/* cards */
+.card{background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,0.03)}
+
+/* chat styles */
+.chat-box{max-width:740px;margin:14px auto;padding:14px;background:var(--card);border-radius:16px;box-shadow:var(--shadow-sm)}
+.chat-window{height:360px;overflow:auto;padding:12px;background:var(--white);border-radius:12px}
+.msg{padding:10px 14px;border-radius:14px;margin-bottom:12px;max-width:78%}
+.msg.client{background:#d1f3f1;color:#000}
+.msg.mine{background:#bfe3ff;margin-left:auto;color:#000}
+
+/* form */
+label{display:block;margin-bottom:6px;color:var(--muted);font-weight:700}
+input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);background:var(--white);margin-bottom:12px}
+
+/* small text */
+.small{font-size:13px;color:var(--muted)}
+
+/* -------------------------
+   SIDE MENU (from right, 80%) - advanced C
+   -------------------------*/
+.side-menu-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:40;opacity:0;visibility:hidden;
+  transition:opacity .24s ease, visibility .24s ease;
 }
+.side-menu-overlay.open{opacity:1;visibility:visible}
 
-.hamburger {
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    background: var(--card);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
+/* menu panel - 80% width from right */
+.side-menu{
+  position:fixed;top:0;right:-100%;height:100vh;width:80vw;max-width:420px;background:var(--card);z-index:50;
+  box-shadow: -20px 0 60px rgba(0,0,0,0.25);padding:20px;display:flex;flex-direction:column;gap:12px;
+  transform:translateX(0);transition:right .28s cubic-bezier(.2,.9,.2,1), background var(--transition);
+  border-radius:16px 0 0 16px;
 }
+/* open state */
+.side-menu.open{ right:0; }
 
-/* ============================================================
-   PANELS / CARDS
-   ============================================================ */
-
-.panel {
-    background: var(--card);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    box-shadow: var(--shadow);
+/* menu header inside side menu */
+.side-menu .menu-header{
+  display:flex;align-items:center;gap:12px;padding-bottom:6px;border-bottom:1px dashed rgba(0,0,0,0.04);
 }
+.side-menu .avatar{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:0 0 64px}
+.side-menu .menu-user{flex:1}
+.side-menu .menu-user .name{font-weight:800}
+.side-menu .menu-user .email{font-size:13px;color:var(--muted)}
 
-.panel h2 {
-    font-size: 28px;
-    margin: 6px 0 16px;
-    font-weight: 800;
+/* menu links */
+.side-menu nav{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.side-menu a{
+  display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;text-decoration:none;color:var(--text);
+  font-weight:700;transition:background .15s;
 }
+.side-menu a:hover{background:var(--surface)}
 
-/* ============================================================
-   PET ITEM
-   ============================================================ */
+/* icons container */
+.side-menu .icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--glass)}
 
-.pet-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #fff;
-    padding: 12px;
-    border-radius: 18px;
-    border: 1px solid rgba(0,0,0,0.03);
-    box-shadow: 0 4px 10px rgba(10,10,10,0.03);
+/* logout at bottom */
+.side-menu .menu-footer{margin-top:auto;padding-top:12px;border-top:1px dashed rgba(0,0,0,0.04)}
+.side-menu .logout{display:block;padding:12px;border-radius:10px;text-align:center;background:#ffecec;color:#b32a2a;font-weight:800}
+
+/* -------------------------
+   Responsiveness
+   -------------------------*/
+@media (min-width:1000px){
+  .container{max-width:1100px;padding:28px}
+  .panel{padding:28px}
+  .brand h1{font-size:28px}
 }
-
-.pet-avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #fff;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-}
-
-.pet-name {
-    font-size: 20px;
-    font-weight: 700;
-}
-
-/* Add pet button */
-.btn-pill {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 20px;
-    margin-top: 14px;
-    background: var(--glass);
-    color: var(--muted);
-    font-size: 26px;
-    font-weight: 700;
-    border-radius: 20px;
-    border: 1px solid rgba(0,0,0,0.03);
-}
-
-/* ============================================================
-   SEARCH
-   ============================================================ */
-
-.search {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 20px;
-    border: 6px solid #000;
-    border-radius: 30px;
-    background: #fff;
-    height: 64px;
-    font-size: 18px;
-}
-
-/* ============================================================
-   ACTION BUTTONS
-   ============================================================ */
-
-.action-list {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-top: 18px;
-}
-
-.action-btn {
-    background: var(--btn-bg);
-    color: var(--btn-text);
-    border-radius: 22px;
-    padding: 20px;
-    font-size: 20px;
-    font-weight: 800;
-    text-align: center;
-    box-shadow: var(--shadow);
-    border: none;
-}
-
-.btn-back {
-    margin: 34px auto 0;
-    display: inline-block;
-    padding: 24px 36px;
-    background: #6f4bb0;
-    color: #fff;
-    border-radius: 40px;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-/* ============================================================
-   CHAT
-   ============================================================ */
-
-.chat-box {
-    max-width: 700px;
-    margin: 12px auto;
-    padding: 14px;
-    background: var(--card);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-}
-
-.chat-window {
-    height: 360px;
-    overflow: auto;
-    background: var(--bg);
-    padding: 12px;
-    border-radius: 12px;
-}
-
-.msg {
-    padding: 12px 16px;
-    border-radius: 14px;
-    margin-bottom: 12px;
-    max-width: 78%;
-}
-
-.msg.client {
-    background: #d1f3f1;
-    color: #000;
-}
-
-.msg.mine {
-    background: #bfe3ff;
-    margin-left: auto;
-    color: #000;
-}
-
-/* ============================================================
-   FORMS
-   ============================================================ */
-
-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: var(--muted);
-}
-
-input,
-select,
-textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 12px;
-    border: 1px solid rgba(0,0,0,0.06);
-    border-radius: 12px;
-    background: #fff;
-    font-size: 15px;
-}
-
-.small {
-    font-size: 13px;
-    color: var(--muted);
-}
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-
-@media (min-width: 900px) {
-    .container { padding: 40px; }
-    .panel { padding: 28px; }
-    .pet-avatar { width: 72px; height: 72px; }
-    .search { height: 72px; font-size: 20px; }
-}
-
-/* ============================================================
-   EMPLOYEE MODE REFINEMENTS
-   ============================================================ */
-
-body.employee .panel {
-    border-radius: 12px;
-}
-
-body.employee .pet-item {
-    padding: 10px;
-    border-radius: 8px;
-    background: var(--card);
-}
-
-body.employee .action-btn {
-    border-radius: 8px;
-    padding: 12px;
-    font-weight: 700;
-}
-
-body.employee .brand h1 {
-    font-size: 20px;
-    font-weight: 700;
+@media (max-width:720px){
+  .panel{border-radius:22px;padding:18px}
+  .brand h1{font-size:20px}
+  .search{height:64px}
 }
