@@ -1,45 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Meus Animais</title>
-    <link rel="stylesheet" href="../style.css">
+  <meta charset="utf-8">
+  <title>Meus Animais</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../script-global.js" defer></script>
 </head>
-<script>
-function toggleTheme(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-}
-
-if(localStorage.getItem("theme") === "dark"){
-    document.body.classList.add("dark");
-}
-</script>
-
-<body>
-
-<header><h1>Meus Animais</h1></header>
-<button class="theme-toggle" onclick="toggleTheme()">🌙 Tema</button>
-
-<nav>
-    <a href="cliente-home.html">Início</a>
-    <a href="dashboard-cliente.html">Dashboard</a>
-    <a href="meus-animais.html">Meus Animais</a>
-    <a href="meus-exames.html">Meus Exames</a>
-    <a href="historico.html">Histórico</a>
-    <a href="chat-cliente.html">Chat</a>
-    <a href="perfil.html">Perfil</a>
-</nav>
-
-<div class="container">
-
-    <div class="card">
-        <h2>Animal Cadastrado</h2>
-        <p><b>Nome:</b> Rex</p>
-        <p><b>Espécie:</b> Cachorro</p>
+<body class="client">
+  <div class="side-menu-overlay" onclick="closeSideMenu()"></div>
+  <aside class="side-menu" aria-hidden="true">
+    <div class="menu-header">
+      <div class="avatar"><img src="../assets/pet-placeholder.png" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="menu-user"><div class="name">João Cliente</div><div class="email">cliente@email.com</div></div>
     </div>
+    <nav>
+      <a href="cliente-home.html"><span class="icon">🏠</span> Início</a>
+      <a href="dashboard-cliente.html"><span class="icon">📊</span> Dashboard</a>
+      <a href="meus-animais.html"><span class="icon">🐾</span> Meus Animais</a>
+      <a href="meus-exames.html"><span class="icon">🧪</span> Meus Exames</a>
+      <a href="historico.html"><span class="icon">📜</span> Histórico</a>
+      <a href="chat-cliente.html"><span class="icon">💬</span> Chat</a>
+      <a href="perfil.html"><span class="icon">👤</span> Perfil</a>
+    </nav>
+    <div class="menu-footer">
+      <a class="logout" href="../index.html">Sair</a>
+    </div>
+  </aside>
 
-</div>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><div class="logo"><img src="../assets/pet-placeholder.png" alt="" style="width:36px"></div><h1>Meus Animais</h1></div>
+      <div class="header-controls">
+        <button class="theme-toggle" onclick="toggleTheme()">Tema</button>
+        <button class="hamburger" onclick="openSideMenu()">≡</button>
+      </div>
+    </header>
 
+    <main>
+      <section class="panel">
+        <h2>Adicionar Pet</h2>
+        <form id="formPet">
+          <label>Nome do Pet</label>
+          <input id="petNome" required>
+          <label>Espécie</label>
+          <select id="petEspecie"><option>Cachorro</option><option>Gato</option><option>Coelho</option></select>
+          <label>Foto (URL) - opcional</label>
+          <input id="petAvatar" placeholder="https://...">
+          <button class="action-btn" type="submit">Adicionar Pet</button>
+        </form>
+
+        <hr style="margin:18px 0">
+        <h3>Seus Pets</h3>
+        <div id="listaAnimais"></div>
+      </section>
+    </main>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderPetList('#listaAnimais');
+  document.getElementById('formPet').addEventListener('submit', e=>{
+    e.preventDefault();
+    const nome = document.getElementById('petNome').value.trim();
+    const especie = document.getElementById('petEspecie').value;
+    const avatar = document.getElementById('petAvatar').value || '../assets/pet-placeholder.png';
+    if(!nome){ alert('Preencha o nome'); return; }
+    cadastrarPet({ id:Date.now(), nome, especie, avatar });
+    renderPetList('#listaAnimais');
+    e.target.reset();
+  });
+});
+</script>
 </body>
 </html>
