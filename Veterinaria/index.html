@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <title>Clínica Veterinária</title>
     <link rel="stylesheet" href="style.css">
+    <script defer src="script-global.js"></script>
 </head>
-<script>
-function toggleTheme(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-}
 
-if(localStorage.getItem("theme") === "dark"){
-    document.body.classList.add("dark");
-}
-</script>
+<body class="client">
 
-<body>
-
-<header><h1>Sistema da Clínica Veterinária</h1></header>
-<button class="theme-toggle" onclick="toggleTheme()">🌙 Tema</button>
+<header class="header">
+    <div class="brand">
+        <div class="logo">🐾</div>
+        <h1>UNIPet</h1>
+    </div>
+</header>
 
 <div class="container">
-    <div class="card">
+
+    <div class="panel" style="text-align:center; padding:40px;">
         <h2>Bem-vindo!</h2>
         <p>Este é o protótipo do sistema da clínica veterinária.</p>
-        <a href="login.html"><button>Entrar no Sistema</button></a>
+
+        <a href="login.html" class="action-btn" style="margin-top:26px; display:block;">
+            Entrar no Sistema
+        </a>
     </div>
+
 </div>
 
 </body>
