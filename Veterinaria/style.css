@@ -1,251 +1,326 @@
-/* style.css — refeito para o protótipo UNIPet
-   - blobs (client)
-   - menu lateral avançado (vindo da direita, 80%)
-   - tema claro / escuro (transição)
-   - classes esperadas: body.client, .container, .header, .brand, .panel, .action-btn, .pet-item, etc.
-*/
-
-/* -------------------------
-   Variáveis (light default)
-   -------------------------*/
+/* ===== Variáveis ===== */
 :root{
-  --bg: #ffffff;
-  --surface: #f7f8fa;
-  --card: #ffffff;
-  --muted: #8b97a3;
-  --text: #0f1720;
-  --accent: #111111;
-  --primary: #0b3a3b;       /* employee primary, used sparingly */
-  --black-btn: #0b0b0b;
-  --white: #ffffff;
-  --glass: rgba(255,255,255,0.72);
-  --radius-lg: 26px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
-  --shadow-lg: 0 12px 30px rgba(10,20,30,0.08);
-  --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
-  --transition: 0.22s ease;
+  --bg:#ffffff;
+  --surface:#f7f8fa;
+  --card:#ffffff;
+  --muted:#8b97a3;
+  --text:#0f1720;
+  --primary:#0b3a3b;
+  --black-btn:#0b0b0b;
+  --white:#ffffff;
+  --glass:rgba(255,255,255,0.72);
+  --radius-lg:26px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --shadow-lg:0 12px 30px rgba(10,20,30,0.08);
+  --shadow-sm:0 6px 18px rgba(16,24,40,0.06);
+  --transition:0.22s ease;
 }
 
-/* Dark theme overrides (applied when body.dark) */
+/* ===== Tema escuro ===== */
 body.dark{
-  --bg: #0b0f12;
-  --surface: #0f1315;
-  --card: #121416;
-  --muted: #9aa4ad;
-  --text: #e6eef2;
-  --black-btn: #0b3a3b;
-  --glass: rgba(255,255,255,0.04);
-  --shadow-lg: 0 14px 36px rgba(0,0,0,0.6);
+  --bg:#0b0f12;
+  --surface:#0f1315;
+  --card:#121416;
+  --muted:#9aa4ad;
+  --text:#e6eef2;
+  --black-btn:#0b3a3b;
+  --glass:rgba(255,255,255,0.06);
+  --shadow-lg:0 14px 36px rgba(0,0,0,0.6);
 }
 
-/* Employee variant (keeps a more formal system) */
+/* ===== Funcionário ===== */
 body.employee{
-  --primary: #0b3a3b;
-  --black-btn: #0b3a3b;
-  --radius-lg: 12px;
+  --primary:#0b3a3b;
+  --black-btn:#0b3a3b;
+  --radius-lg:12px;
 }
 
-/* -------------------------
-   Reset / Base
-   -------------------------*/
+/* ===== Base ===== */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
-  background: linear-gradient(180deg,var(--bg) 0%, var(--surface) 100%);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  background:linear-gradient(180deg,var(--bg),var(--surface));
   color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  transition: background var(--transition), color var(--transition);
-  position:relative;
+  transition:background var(--transition),color var(--transition);
 }
 
-/* ensure client blobs are above background but behind content */
-body.client{
-  overflow-x:hidden;
-}
-
-/* blobs (decor) */
+/* ===== Blobs (clientes) ===== */
+body.client{overflow-x:hidden}
 body.client::before,
 body.client::after{
   content:"";
   position:fixed;
-  z-index:0;
-  pointer-events:none;
   border-radius:50%;
-  transition: transform .6s ease var(--transition);
+  pointer-events:none;
+  z-index:0;
 }
 body.client::before{
   width:460px;height:340px;
   right:-120px;top:-80px;
-  background:#9aa0a6;
-  transform: rotate(-8deg);
-  opacity:0.92;
+  background:#9aa0a6;opacity:.92;
 }
 body.client::after{
   width:560px;height:560px;
   left:-200px;bottom:-140px;
-  background:#f6b98b;
-  opacity:0.95;
+  background:#f6b98b;opacity:.95;
 }
 
-/* container and layout */
+/* ===== Layout ===== */
 .container{
   max-width:980px;
   margin:20px auto;
   padding:20px;
-  position:relative;
   z-index:2;
+  position:relative;
 }
 
-/* header / brand */
+/* ===== Header ===== */
 .header{
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  gap:12px;
-  margin-bottom:16px;
-  z-index:10;
-}
-.brand{
-  display:flex;
-  gap:12px;
   align-items:center;
+  margin-bottom:16px;
 }
-.brand .logo{
-  width:56px;height:56px;border-radius:12px;
-  background:var(--card); display:flex;align-items:center;justify-content:center;
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:56px;height:56px;
+  background:var(--card);
+  border-radius:12px;
+  display:flex;justify-content:center;align-items:center;
   box-shadow:var(--shadow-sm);
 }
-.brand h1{
-  margin:0;font-size:24px;font-weight:800;letter-spacing:-0.6px;
-}
+.brand h1{margin:0;font-size:24px;font-weight:800}
 
-/* theme toggle and hamburger container */
-.header-controls{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
+/* ===== Controles (tema + hambúrguer) ===== */
+.header-controls{display:flex;gap:12px}
+
 .theme-toggle{
   background:var(--glass);
-  border:1px solid rgba(0,0,0,0.04);
-  padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;
+  border:1px solid rgba(0,0,0,.06);
+  padding:10px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
   box-shadow:var(--shadow-sm);
-}
-.hamburger{
-  width:46px;height:46px;border-radius:10px;background:var(--card);display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--shadow-sm);cursor:pointer;border:0;font-size:20px;
+  color:var(--text);
 }
 
-/* panel */
+body.dark .theme-toggle{
+  background:#fff;
+  color:#000;
+}
+
+.hamburger{
+  width:46px;height:46px;
+  background:var(--card);
+  border-radius:10px;
+  display:flex;justify-content:center;align-items:center;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+}
+
+.hamburger span{
+  font-size:26px;
+  font-weight:900;
+  color:var(--text);
+}
+
+body.dark .hamburger span{
+  color:#fff;
+}
+
+/* ===== Painel ===== */
 .panel{
   background:var(--card);
   border-radius:var(--radius-lg);
-  padding:20px;
+  padding:22px;
   box-shadow:var(--shadow-lg);
-  border:1px solid rgba(15,20,25,0.03);
-  position:relative;
-  z-index:3;
 }
 
-/* search (sketch style) */
+/* ===== Busca ===== */
 .search{
-  display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:30px;background:var(--white);
-  font-size:16px;border:6px solid #000;height:64px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  border-radius:30px;
+  border:6px solid #000;
+  background:#fff;
+  height:64px;
 }
 
-/* action list and buttons */
+/* ===== Botões ===== */
 .action-list{display:flex;flex-direction:column;gap:16px;margin-top:16px}
+
 .action-btn{
-  display:block;background:var(--black-btn);color:var(--white);
-  border-radius:22px;padding:18px;font-weight:800;font-size:18px;text-align:center;border:0;cursor:pointer;
+  display:block;
+  background:var(--black-btn);
+  color:#fff;
+  padding:18px;
+  border-radius:22px;
+  font-size:18px;
+  font-weight:800;
+  text-align:center;
+  border:0;
+  cursor:pointer;
   box-shadow:var(--shadow-sm);
 }
+
 .btn-back{
-  display:inline-block;margin:28px auto 0;padding:16px 28px;border-radius:40px;background:#6f4bb0;color:#fff;font-weight:800;text-align:center;
+  padding:16px 28px;
+  border-radius:40px;
+  background:#6f4bb0;
+  color:#fff;
+  font-weight:800;
+  display:inline-block;
+  margin-top:28px;
 }
 
-/* pet item */
-.pet-item{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:18px;padding:12px;border:1px solid rgba(0,0,0,0.03);box-shadow:var(--shadow-sm)}
-.pet-avatar{width:64px;height:64px;border-radius:50%;overflow:hidden;flex:0 0 64px}
-.pet-name{font-weight:700;font-size:18px}
+/* ===== Pets ===== */
+.pet-item{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);
+  padding:12px;border-radius:18px;
+  border:1px solid rgba(0,0,0,0.03);
+  box-shadow:var(--shadow-sm);
+}
+.pet-avatar{width:64px;height:64px;border-radius:50%;overflow:hidden}
+.pet-name{font-size:18px;font-weight:700}
 
-/* pill CTA */
-.btn-pill{display:block;width:100%;text-align:center;padding:18px;background:var(--glass);color:var(--muted);font-size:22px;border-radius:20px;border:1px solid rgba(0,0,0,0.03);font-weight:800}
+/* ===== Card ===== */
+.card{
+  background:var(--card);
+  padding:18px;
+  border-radius:12px;
+  box-shadow:var(--shadow-sm);
+}
 
-/* cards */
-.card{background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,0.03)}
+/* ===== Chat ===== */
+.chat-box{
+  max-width:740px;
+  margin:14px auto;
+  padding:14px;
+  background:var(--card);
+  border-radius:16px;
+  box-shadow:var(--shadow-sm);
+}
 
-/* chat styles */
-.chat-box{max-width:740px;margin:14px auto;padding:14px;background:var(--card);border-radius:16px;box-shadow:var(--shadow-sm)}
-.chat-window{height:360px;overflow:auto;padding:12px;background:var(--white);border-radius:12px}
-.msg{padding:10px 14px;border-radius:14px;margin-bottom:12px;max-width:78%}
-.msg.client{background:#d1f3f1;color:#000}
-.msg.mine{background:#bfe3ff;margin-left:auto;color:#000}
+.chat-window{
+  height:360px;
+  overflow:auto;
+  padding:12px;
+  background:#fff;
+  border-radius:12px;
+}
 
-/* form */
+.msg{
+  padding:10px 14px;
+  border-radius:14px;
+  margin-bottom:12px;
+  max-width:78%;
+}
+
+.msg.client{background:#d1f3f1}
+.msg.mine{background:#bfe3ff;margin-left:auto}
+
+/* ===== Form ===== */
 label{display:block;margin-bottom:6px;color:var(--muted);font-weight:700}
-input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);background:var(--white);margin-bottom:12px}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.06);
+  background:#fff;
+  margin-bottom:12px;
+}
 
-/* small text */
-.small{font-size:13px;color:var(--muted)}
-
-/* -------------------------
-   SIDE MENU (from right, 80%) - advanced C
-   -------------------------*/
+/* ===== Side Menu (80% right) ===== */
 .side-menu-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:40;opacity:0;visibility:hidden;
-  transition:opacity .24s ease, visibility .24s ease;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.35);
+  opacity:0;visibility:hidden;
+  transition:opacity .24s,visibility .24s;
+  z-index:40;
 }
-.side-menu-overlay.open{opacity:1;visibility:visible}
+.side-menu-overlay.open{
+  opacity:1;visibility:visible;
+}
 
-/* menu panel - 80% width from right */
 .side-menu{
-  position:fixed;top:0;right:-100%;height:100vh;width:80vw;max-width:420px;background:var(--card);z-index:50;
-  box-shadow: -20px 0 60px rgba(0,0,0,0.25);padding:20px;display:flex;flex-direction:column;gap:12px;
-  transform:translateX(0);transition:right .28s cubic-bezier(.2,.9,.2,1), background var(--transition);
+  position:fixed;top:0;right:-100%;
+  height:100vh;width:80vw;max-width:420px;
+  background:var(--card);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
   border-radius:16px 0 0 16px;
+  box-shadow:-20px 0 60px rgba(0,0,0,0.25);
+  transition:right .28s cubic-bezier(.2,.9,.2,1);
+  z-index:50;
 }
-/* open state */
-.side-menu.open{ right:0; }
 
-/* menu header inside side menu */
-.side-menu .menu-header{
-  display:flex;align-items:center;gap:12px;padding-bottom:6px;border-bottom:1px dashed rgba(0,0,0,0.04);
+.side-menu.open{right:0}
+
+.menu-header{
+  display:flex;align-items:center;gap:12px;
+  padding-bottom:6px;
+  border-bottom:1px dashed rgba(0,0,0,0.04);
 }
-.side-menu .avatar{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:0 0 64px}
-.side-menu .menu-user{flex:1}
-.side-menu .menu-user .name{font-weight:800}
-.side-menu .menu-user .email{font-size:13px;color:var(--muted)}
 
-/* menu links */
-.side-menu nav{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.avatar{width:64px;height:64px;border-radius:12px;overflow:hidden}
+.menu-user .name{font-weight:800}
+.menu-user .email{font-size:13px;color:var(--muted)}
+
+.side-menu nav{
+  display:flex;flex-direction:column;gap:6px;margin-top:12px;
+}
+
 .side-menu a{
-  display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;text-decoration:none;color:var(--text);
-  font-weight:700;transition:background .15s;
+  display:flex;align-items:center;gap:12px;
+  padding:12px;
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--text);
+  font-weight:700;
 }
+
 .side-menu a:hover{background:var(--surface)}
 
-/* icons container */
-.side-menu .icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--glass)}
+.icon{
+  width:38px;height:38px;
+  background:var(--glass);
+  border-radius:8px;
+  display:flex;justify-content:center;align-items:center;
+}
 
-/* logout at bottom */
-.side-menu .menu-footer{margin-top:auto;padding-top:12px;border-top:1px dashed rgba(0,0,0,0.04)}
-.side-menu .logout{display:block;padding:12px;border-radius:10px;text-align:center;background:#ffecec;color:#b32a2a;font-weight:800}
+.menu-footer{
+  margin-top:auto;
+  padding-top:12px;
+  border-top:1px dashed rgba(0,0,0,0.04);
+}
 
-/* -------------------------
-   Responsiveness
-   -------------------------*/
-@media (min-width:1000px){
+.logout{
+  text-align:center;
+  padding:12px;
+  border-radius:10px;
+  background:#ffecec;
+  color:#b32a2a;
+  font-weight:800;
+  display:block;
+}
+
+/* ===== Responsivo ===== */
+@media(min-width:1000px){
   .container{max-width:1100px;padding:28px}
   .panel{padding:28px}
   .brand h1{font-size:28px}
 }
-@media (max-width:720px){
+
+@media(max-width:720px){
   .panel{border-radius:22px;padding:18px}
   .brand h1{font-size:20px}
-  .search{height:64px}
 }
