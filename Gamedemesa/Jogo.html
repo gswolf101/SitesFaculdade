@@ -10,57 +10,68 @@
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
             color: white;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
         }
         #container {
-            width: 100vw;
-            height: 100vh;
-            max-width: 400px;
-            padding: 20px;
-            overflow-y: auto;
+            width: 100%;
+            max-width: 420px;
+            padding: 15px;
         }
-        h1, h2 { text-align: center; margin-bottom: 20px; }
+        h1, h2 { text-align: center; margin: 20px 0; }
         .square {
-            width: 120px; height: 120px;
-            border: 4px solid #fff; border-radius: 20px;
-            margin: 0 auto 10px;
+            width: 110px; height: 110px;
+            border: 4px solid #fff; border-radius: 18px;
+            margin: 0 auto 8px;
             display: flex; align-items: center; justify-content: center;
         }
-        .circle {
-            width: 70px; height: 70px; border-radius: 50%;
-        }
-        .cultista { background-color: #ffffff; }
-        .ladino { background-color: #ff0000; }
-        .guerreiro { background-color: #008000; }
-        #start-screen { display: flex; flex-direction: column; gap: 25px; align-items: center; }
+        .circle { width: 65px; height: 65px; border-radius: 50%; }
+        .cultista { background: #ffffff; }
+        .ladino    { background: #ff0000; }
+        .guerreiro { background: #008000; }
+
+        #start-screen { display: flex; flex-direction: column; gap: 24px; }
         .class-card {
-            background: rgba(255,255,255,0.12);
-            padding: 20px;
-            border-radius: 15px;
-            width: 100%;
-            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 16px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.25s;
+            transition: 0.2s;
         }
-        .class-card:active { transform: scale(0.97); background: rgba(255,255,255,0.25); }
-        #rules-btn { padding: 12px 30px; background: #673ab7; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; }
-        
-        /* Modais */
+        .class-card:active { transform: scale(0.98); background: rgba(255,255,255,0.2); }
+
+        .bar {
+            height: 24px; background: rgba(255,255,255,0.15);
+            border-radius: 12px; overflow: hidden; margin: 8px 0 4px;
+        }
+        .fill { height: 100%; transition: width 0.4s ease; }
+
+        button {
+            width: 100%; padding: 14px;
+            margin: 8px 0;
+            border: none; border-radius: 10px;
+            font-weight: bold; font-size: 16px;
+            cursor: pointer;
+        }
+        #attack-btn     { background: #ff9800; color: white; }
+        #skill-btn      { display: none; }
+        #apply-damage   { background: #2196f3; color: white; width: auto; padding: 14px 24px; }
+        .bottom-buttons { display: flex; gap: 12px; }
+        .bottom-buttons button { flex: 1; }
+
         .modal {
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.9);
             display: none;
-            justify-content: center; align-items: center;
+            place-items: center;
             z-index: 1000;
         }
         .modal-content {
-            background: #1a1a1a;
-            padding: 30px;
+            background: #111;
+            padding: 30px 24px;
             border-radius: 16px;
-            width: 85%;
+            width: 86%;
             max-width: 340px;
             text-align: center;
         }
@@ -70,22 +81,27 @@
             color: #ffd700;
             margin: 20px 0;
         }
-        button.modal-btn {
-            padding: 14px 50px;
-            margin: 15px 5px 0;
-            border: none; border-radius: 10px;
-            font-size: 18px; font-weight: bold;
-            cursor: pointer;
+
+        #message {
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: 999;
+            pointer-events: none;
+            max-width: 90%;
         }
-        #ok-initiative { background: #4CAF50; color: white; }
-        #close-rules { background: #f44336; color: white; }
-        
-        /* ... o resto do CSS da tela de jogo continua igual ao anterior ... */
+        #message.show { opacity: 1; }
     </style>
 </head>
 <body>
 
 <div id="container">
+
     <div id="start-screen">
         <h1>Escolha sua Classe</h1>
         
@@ -93,24 +109,46 @@
             <div class="square"><div class="circle cultista"></div></div>
             <h2>Cultista</h2>
         </div>
-        
         <div class="class-card" data-class="ladino">
             <div class="square"><div class="circle ladino"></div></div>
             <h2>Ladino</h2>
         </div>
-        
         <div class="class-card" data-class="guerreiro">
             <div class="square"><div class="circle guerreiro"></div></div>
             <h2>Guerreiro</h2>
         </div>
-
-        <button id="rules-btn">Regras</button>
     </div>
 
-    <!-- Tela do jogo (mantém o conteúdo anterior) -->
-    <div id="game-screen" style="display:none; flex-direction:column; height:100%; gap:20px;">
-        <!-- Coloque aqui todo o conteúdo da tela de jogo que estava antes -->
-        <!-- Barra de vida, input de dano, botões, etc. -->
+    <div id="game-screen" style="display:none;">
+        <div style="text-align:center;">
+            <div class="square"><div class="circle" id="class-circle"></div></div>
+            <h1 id="class-name">—</h1>
+        </div>
+
+        <div>
+            <strong>Vida:</strong>
+            <div class="bar"><div class="fill" id="health-fill" style="background:#4caf50;"></div></div>
+            <div id="health-text" style="text-align:center;">100 / 100</div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin:12px 0;">
+            <input type="number" id="damage-input" placeholder="Dano recebido" min="0" style="flex:1; padding:12px; border-radius:8px; border:none;">
+            <button id="apply-damage">Aplicar</button>
+        </div>
+
+        <div>
+            <strong>Carga de Habilidade:</strong>
+            <div class="bar"><div class="fill" id="charge-fill" style="background:#2196f3;"></div></div>
+            <div id="charge-text" style="text-align:center;">0%</div>
+        </div>
+
+        <button id="attack-btn">Ataque Realizado</button>
+        <button id="skill-btn">Usar Habilidade</button>
+
+        <div class="bottom-buttons">
+            <button id="reset-btn" style="background:#f44336;">Reiniciar</button>
+            <button id="back-btn" style="background:#757575;">Voltar</button>
+        </div>
     </div>
 </div>
 
@@ -119,66 +157,160 @@
     <div class="modal-content">
         <h2>Sua Iniciativa</h2>
         <div id="initiative-number">??</div>
-        <button class="modal-btn" id="ok-initiative">OK</button>
+        <button id="ok-initiative" style="background:#4caf50; color:white; padding:16px 60px; font-size:18px;">OK</button>
     </div>
 </div>
 
-<!-- Modal Regras -->
-<div id="rules-modal" class="modal">
-    <div class="modal-content">
-        <h2>Regras</h2>
-        <ul style="text-align:left; margin:20px 0; line-height:1.6;">
-            <li><strong>A ordem é decidida pelo número menor para o maior</strong></li>
-            <li><strong>Caiu da mesa perde 10 de vida</strong></li>
-        </ul>
-        <button class="modal-btn" id="close-rules">Fechar</button>
-    </div>
-</div>
+<div id="message"></div>
 
 <script>
-// Variáveis principais
-const startScreen = document.getElementById('start-screen');
-const gameScreen = document.getElementById('game-screen');
+const state = {
+    class: null,
+    health: 100,
+    maxHealth: 100,
+    charge: 0,
+    doubleDamage: false,
+    ignoreNext: false
+};
+
+const colors = {
+    cultista: '#ffffff',
+    ladino: '#ff0000',
+    guerreiro: '#008000'
+};
+
+const skillMessages = {
+    cultista: "Você perde 20% da vida, mas o próximo ataque causa 2× dano!",
+    ladino: "Agora você pode fazer dois movimentos!",
+    guerreiro: "Você ignorará o próximo ataque recebido!"
+};
+
+const startScreen    = document.getElementById('start-screen');
+const gameScreen     = document.getElementById('game-screen');
 const initiativeModal = document.getElementById('initiative-modal');
 const initiativeNumber = document.getElementById('initiative-number');
-const rulesModal = document.getElementById('rules-modal');
+const messageDiv     = document.getElementById('message');
 
 // Clique nas classes
 document.querySelectorAll('.class-card').forEach(card => {
-    card.addEventListener('click', function(e) {
-        e.preventDefault(); // segurança extra
-        const selectedClass = this.getAttribute('data-class');
+    card.addEventListener('click', () => {
+        state.class = card.dataset.class;
         
-        // Gera iniciativa
-        const randomInit = Math.floor(Math.random() * 100) + 1;
-        initiativeNumber.textContent = randomInit;
-        
-        // Mostra modal
+        const rnd = Math.floor(Math.random() * 100) + 1;
+        initiativeNumber.textContent = rnd;
         initiativeModal.style.display = 'flex';
-        
-        // Salva a classe escolhida (você pode usar uma variável global ou state)
-        window.selectedClass = selectedClass;
     });
 });
 
-// OK da iniciativa → vai pra tela do jogo
+// OK → vai para jogo
 document.getElementById('ok-initiative').addEventListener('click', () => {
     initiativeModal.style.display = 'none';
     startScreen.style.display = 'none';
-    gameScreen.style.display = 'flex';
-    
-    // Aqui você pode usar window.selectedClass para personalizar a tela do jogo
-    console.log('Classe selecionada:', window.selectedClass);
-    // Atualize a UI do jogo com a classe escolhida
+    gameScreen.style.display = 'block';
+    resetGame();
+    updateUI();
 });
 
-// Regras
-document.getElementById('rules-btn').addEventListener('click', () => {
-    rulesModal.style.display = 'flex';
+// Aplicar dano
+document.getElementById('apply-damage').addEventListener('click', () => {
+    const dmg = Number(document.getElementById('damage-input').value) || 0;
+    document.getElementById('damage-input').value = '';
+
+    if (dmg <= 0) return;
+
+    if (state.ignoreNext) {
+        showMessage("Ataque ignorado!", colors.guerreiro);
+        state.ignoreNext = false;
+    } else {
+        state.health = Math.max(0, state.health - dmg);
+        showMessage(`-${dmg} de dano recebido`, '#ff5252');
+    }
+    updateUI();
 });
-document.getElementById('close-rules').addEventListener('click', () => {
-    rulesModal.style.display = 'none';
+
+// Ataque realizado
+document.getElementById('attack-btn').addEventListener('click', () => {
+    const dmg = state.doubleDamage ? 20 : 10;
+    state.doubleDamage = false;
+    state.charge = Math.min(100, state.charge + 20);
+    showMessage(`Ataque! Dano causado: ${dmg}`, colors[state.class]);
+    updateUI();
 });
+
+// Usar habilidade
+document.getElementById('skill-btn').addEventListener('click', () => {
+    if (state.charge < 100) return;
+    state.charge = 0;
+
+    const color = colors[state.class];
+    const msg = skillMessages[state.class];
+
+    if (state.class === 'cultista') {
+        const sac = Math.floor(state.maxHealth * 0.2);
+        state.health = Math.max(0, state.health - sac);
+        state.doubleDamage = true;
+        showMessage(`${msg} (-${sac} HP)`, color);
+    } else if (state.class === 'ladino') {
+        showMessage(msg, color);
+    } else if (state.class === 'guerreiro') {
+        state.ignoreNext = true;
+        showMessage(msg, color);
+    }
+    updateUI();
+});
+
+// Reiniciar / Voltar
+document.getElementById('reset-btn').addEventListener('click', () => {
+    resetGame();
+    updateUI();
+    showMessage('Tudo reiniciado!', '#4caf50');
+});
+
+document.getElementById('back-btn').addEventListener('click', () => {
+    gameScreen.style.display = 'none';
+    startScreen.style.display = 'flex';
+});
+
+function resetGame() {
+    state.health = 100;
+    state.charge = 0;
+    state.doubleDamage = false;
+    state.ignoreNext = false;
+}
+
+function updateUI() {
+    // Classe
+    document.getElementById('class-circle').className = `circle ${state.class}`;
+    document.getElementById('class-name').textContent = state.class.charAt(0).toUpperCase() + state.class.slice(1);
+
+    // Vida
+    const hpPerc = (state.health / state.maxHealth) * 100;
+    document.getElementById('health-fill').style.width = hpPerc + '%';
+    let hpColor = hpPerc > 60 ? '#4caf50' : hpPerc > 30 ? '#ffeb3b' : '#f44336';
+    document.getElementById('health-fill').style.background = hpColor;
+    document.getElementById('health-text').textContent = `${Math.floor(state.health)} / ${state.maxHealth}`;
+
+    // Carga
+    document.getElementById('charge-fill').style.width = state.charge + '%';
+    document.getElementById('charge-text').textContent = `${state.charge}%`;
+
+    // Botão habilidade
+    const btn = document.getElementById('skill-btn');
+    if (state.charge >= 100) {
+        btn.style.display = 'block';
+        btn.textContent = state.class === 'cultista' ? 'Sacrificar' : 'Usar Habilidade';
+        btn.style.background = colors[state.class];
+    } else {
+        btn.style.display = 'none';
+    }
+}
+
+function showMessage(text, color) {
+    messageDiv.textContent = text;
+    messageDiv.style.color = color;
+    messageDiv.classList.add('show');
+    setTimeout(() => messageDiv.classList.remove('show'), 7000);
+}
 </script>
 </body>
 </html>
