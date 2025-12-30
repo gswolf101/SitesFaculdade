@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>Tracker - Jogo de Tampinhas</title>
+    <title>Tracker - Tampinhas</title>
     <style>
         * {
             margin: 0;
@@ -14,8 +14,8 @@
 
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #111, #1a1a1a);
-            color: #fff;
+            background: linear-gradient(135deg, #0d1117, #161b22);
+            color: #e6edf3;
             min-height: 100vh;
             touch-action: manipulation;
         }
@@ -26,53 +26,56 @@
             padding: 16px;
         }
 
-        h1, h2 {
+        h1 { font-size: 1.8rem; text-align: center; margin: 16px 0; }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .class-card {
+            background: rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 12px;
             text-align: center;
-            margin: 16px 0;
-            font-size: 1.7rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .class-card:active {
+            background: rgba(255,255,255,0.14);
+            transform: scale(0.97);
         }
 
         .square {
-            width: 110px;
-            height: 110px;
+            width: 90px;
+            height: 90px;
             margin: 0 auto 8px;
-            border: 4px solid #ddd;
-            border-radius: 16px;
+            border: 3px solid #444;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .circle {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
         }
 
-        .cultista { background: #ffffff; }
-        .ladino    { background: #e53935; }
-        .guerreiro { background: #43a047; }
-
-        .class-card {
-            background: rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.15s;
-            user-select: none;
-        }
-
-        .class-card:active {
-            background: rgba(255,255,255,0.18);
-            transform: scale(0.98);
-        }
+        .cultista   { background: #ffffff; }
+        .ladino     { background: #e53935; }
+        .guerreiro  { background: #43a047; }
+        .teleportador { background: #0288d1; }
 
         .bar {
-            height: 28px;
-            background: rgba(255,255,255,0.12);
-            border-radius: 14px;
+            height: 26px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 13px;
             overflow: hidden;
             margin: 8px 0 4px;
         }
@@ -82,15 +85,25 @@
             transition: width 0.4s ease;
         }
 
-        input[type="number"] {
-            flex: 1;
-            padding: 14px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.9);
-            color: #111;
+        .damage-buttons {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0;
         }
+
+        .damage-btn {
+            flex: 1;
+            padding: 18px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #dmg-10 { background: #7cb342; }
+        #dmg-20 { background: #f4511e; }
 
         button {
             width: 100%;
@@ -101,16 +114,9 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: transform 0.1s;
-            touch-action: manipulation;
-        }
-
-        button:active {
-            transform: scale(0.97);
         }
 
         #attack-btn     { background: #fb8c00; color: white; }
-        #apply-damage   { background: #1976d2; color: white; padding: 16px 28px; width: auto; }
         #skill-btn      { display: none; font-size: 1.2rem; }
         .bottom-buttons { display: flex; gap: 12px; }
         .bottom-buttons button { flex: 1; padding: 16px; }
@@ -138,7 +144,6 @@
             font-weight: bold;
             color: #ffeb3b;
             margin: 20px 0;
-            text-shadow: 0 0 20px #ffeb3b66;
         }
 
         #message {
@@ -160,17 +165,6 @@
         }
 
         #message.show { opacity: 1; }
-
-        .rules-list {
-            font-size: 1.05rem;
-            line-height: 1.6;
-            margin: 16px 0;
-            text-align: left;
-        }
-
-        .rules-list li {
-            margin-bottom: 12px;
-        }
     </style>
 </head>
 <body>
@@ -181,22 +175,29 @@
     <div id="start-screen">
         <h1>Escolha sua Classe</h1>
 
-        <div class="class-card" data-class="cultista">
-            <div class="square"><div class="circle cultista"></div></div>
-            <h2>Cultista</h2>
+        <div class="classes-grid">
+            <div class="class-card" data-class="cultista">
+                <div class="square"><div class="circle cultista"></div></div>
+                <h2>Cultista</h2>
+            </div>
+
+            <div class="class-card" data-class="ladino">
+                <div class="square"><div class="circle ladino"></div></div>
+                <h2>Ladino</h2>
+            </div>
+
+            <div class="class-card" data-class="guerreiro">
+                <div class="square"><div class="circle guerreiro"></div></div>
+                <h2>Guerreiro</h2>
+            </div>
+
+            <div class="class-card" data-class="teleportador">
+                <div class="square"><div class="circle teleportador"></div></div>
+                <h2>Teleportador</h2>
+            </div>
         </div>
 
-        <div class="class-card" data-class="ladino">
-            <div class="square"><div class="circle ladino"></div></div>
-            <h2>Ladino</h2>
-        </div>
-
-        <div class="class-card" data-class="guerreiro">
-            <div class="square"><div class="circle guerreiro"></div></div>
-            <h2>Guerreiro</h2>
-        </div>
-
-        <button id="rules-btn" style="background:#7e57c2; color:white;">Regras do Jogo</button>
+        <button id="rules-btn" style="background:#7e57c2; color:white; padding:16px; font-size:1.1rem;">Regras do Jogo</button>
     </div>
 
     <!-- Tela do jogo -->
@@ -209,18 +210,21 @@
         <div>
             <strong>Vida</strong>
             <div class="bar"><div class="fill" id="health-fill" style="background:#66bb6a;"></div></div>
-            <div id="health-text" style="text-align:center; font-size:1.2rem;">100 / 100</div>
-        </div>
-
-        <div style="display:flex; gap:10px; margin:16px 0;">
-            <input type="number" id="damage-input" placeholder="Dano recebido" min="0" />
-            <button id="apply-damage">Aplicar</button>
+            <div id="health-text" style="text-align:center; font-size:1.3rem; margin-top:4px;">100 / 100</div>
         </div>
 
         <div>
+            <strong>Dano Recebido</strong>
+            <div class="damage-buttons">
+                <button class="damage-btn" id="dmg-10">10</button>
+                <button class="damage-btn" id="dmg-20">20</button>
+            </div>
+        </div>
+
+        <div style="margin: 20px 0;">
             <strong>Carga de Habilidade</strong>
             <div class="bar"><div class="fill" id="charge-fill" style="background:#42a5f5;"></div></div>
-            <div id="charge-text" style="text-align:center; font-size:1.1rem;">0%</div>
+            <div id="charge-text" style="text-align:center; font-size:1.2rem;">0%</div>
         </div>
 
         <button id="attack-btn">Ataque Realizado</button>
@@ -238,22 +242,22 @@
     <div class="modal-content">
         <h2>Sua Iniciativa</h2>
         <div id="initiative-number">??</div>
-        <button id="ok-initiative" style="background:#66bb6a; color:white; padding:18px 80px; font-size:1.3rem; margin-top:16px;">OK</button>
+        <button id="ok-initiative" style="background:#66bb6a; color:white; padding:18px 80px; font-size:1.4rem; margin-top:16px;">OK</button>
     </div>
 </div>
 
-<!-- Modal Regras -->
+<!-- Modal Regras (atualizado com todas as regras) -->
 <div id="rules-modal" class="modal">
-    <div class="modal-content">
-        <h2>Regras do Jogo</h2>
-        <ul class="rules-list">
-            <li><strong>A ordem é decidida pelo número menor para o maior</strong></li>
-            <li><strong>Caiu da mesa perde 10 de vida</strong></li>
-            <li><strong>O jogador deve usar apenas uma mão para se movimentar, seja criativo, mas sem usar objetos, apenas a sua mão</strong></li>
-            <li><strong>O dano é aplicado quando uma tampinha acertar a outra</strong></li>
-            <li><strong>Ao ativar a habilidade o jogador deve anunciar que irá usá-la</strong></li>
+    <div class="modal-content" style="text-align:left;">
+        <h2 style="text-align:center;">Regras do Jogo</h2>
+        <ul style="list-style:none; line-height:1.6; margin:20px 0; font-size:1.05rem;">
+            <li>• A ordem é decidida pelo número menor para o maior</li>
+            <li>• Caiu da mesa perde 10 de vida</li>
+            <li>• O jogador deve usar apenas **uma mão** para se movimentar, seja criativo, mas sem usar objetos, apenas a sua mão</li>
+            <li>• O dano é aplicado quando uma tampinha acertar a outra</li>
+            <li>• Ao ativar a habilidade o jogador deve anunciar que irá usá-la</li>
         </ul>
-        <button id="close-rules" style="background:#e53935; color:white; padding:16px 60px; margin-top:20px;">Fechar</button>
+        <button id="close-rules" style="background:#e53935; color:white; width:100%; padding:16px; font-size:1.1rem; margin-top:16px;">Fechar</button>
     </div>
 </div>
 
@@ -267,19 +271,22 @@ const state = {
     maxHealth: 100,
     charge: 0,
     doubleDamage: false,
-    ignoreNext: false
+    ignoreNext: false,
+    noAttackThisTurn: false
 };
 
 const colors = {
     cultista: '#ffffff',
     ladino: '#e53935',
-    guerreiro: '#43a047'
+    guerreiro: '#43a047',
+    teleportador: '#0288d1'
 };
 
 const skillMessages = {
     cultista: "Sacrificar! Perde 20% da vida, próximo ataque causa 2× dano!",
     ladino: "Agora você pode fazer dois movimentos!",
-    guerreiro: "Você ignorará o próximo ataque recebido!"
+    guerreiro: "Você ignorará o próximo ataque recebido!",
+    teleportador: "Teleportar! Pode colocar qualquer jogador em qualquer lugar da mesa (sem ataque neste turno)"
 };
 
 const startScreen = document.getElementById('start-screen');
@@ -289,7 +296,7 @@ const initiativeNumber = document.getElementById('initiative-number');
 const rulesModal = document.getElementById('rules-modal');
 const messageDiv = document.getElementById('message');
 
-// Clique nas classes
+// Seleção de classe
 document.querySelectorAll('.class-card').forEach(card => {
     card.addEventListener('click', () => {
         state.class = card.dataset.class;
@@ -299,7 +306,7 @@ document.querySelectorAll('.class-card').forEach(card => {
     });
 });
 
-// OK da iniciativa
+// OK iniciativa → jogo
 document.getElementById('ok-initiative').addEventListener('click', () => {
     initiativeModal.style.display = 'none';
     startScreen.style.display = 'none';
@@ -309,35 +316,35 @@ document.getElementById('ok-initiative').addEventListener('click', () => {
 });
 
 // Regras
-document.getElementById('rules-btn').addEventListener('click', () => {
-    rulesModal.style.display = 'grid';
-});
+document.getElementById('rules-btn').addEventListener('click', () => rulesModal.style.display = 'grid');
+document.getElementById('close-rules').addEventListener('click', () => rulesModal.style.display = 'none');
 
-document.getElementById('close-rules').addEventListener('click', () => {
-    rulesModal.style.display = 'none';
-});
+// Aplicar dano (10 ou 20)
+document.getElementById('dmg-10').addEventListener('click', () => applyDamage(10));
+document.getElementById('dmg-20').addEventListener('click', () => applyDamage(20));
 
-// Aplicar dano recebido
-document.getElementById('apply-damage').addEventListener('click', () => {
-    const dmg = Number(document.getElementById('damage-input').value) || 0;
-    document.getElementById('damage-input').value = '';
-    if (dmg <= 0) return;
-
+function applyDamage(dmg) {
     if (state.ignoreNext) {
         showMessage("Ataque ignorado!", colors.guerreiro);
         state.ignoreNext = false;
     } else {
         state.health = Math.max(0, state.health - dmg);
-        showMessage(`-${dmg} de dano`, '#ff5252');
+        showMessage(`-${dmg} de dano`, '#ff7043');
     }
     updateUI();
-});
+}
 
-// Ataque realizado (avança turno)
+// Ataque realizado
 document.getElementById('attack-btn').addEventListener('click', () => {
+    if (state.noAttackThisTurn) {
+        showMessage("Não pode atacar após usar Teleportar!", '#ff7043');
+        return;
+    }
+
     const dmg = state.doubleDamage ? 20 : 10;
     state.doubleDamage = false;
     state.charge = Math.min(100, state.charge + 20);
+    state.noAttackThisTurn = false; // reseta caso venha de habilidade anterior
     showMessage(`Ataque! Dano causado: ${dmg}`, colors[state.class]);
     updateUI();
 });
@@ -360,47 +367,47 @@ document.getElementById('skill-btn').addEventListener('click', () => {
     } else if (state.class === 'guerreiro') {
         state.ignoreNext = true;
         showMessage(msg, color);
+    } else if (state.class === 'teleportador') {
+        state.noAttackThisTurn = true;
+        showMessage(msg, color);
     }
+
     updateUI();
 });
 
 // Reiniciar / Voltar
-document.getElementById('reset-btn').addEventListener('click', resetGameAndUpdate);
+document.getElementById('reset-btn').addEventListener('click', () => {
+    resetGame();
+    updateUI();
+    showMessage('Tudo reiniciado!', '#66bb6a');
+});
+
 document.getElementById('back-btn').addEventListener('click', () => {
     gameScreen.style.display = 'none';
     startScreen.style.display = 'block';
 });
-
-function resetGameAndUpdate() {
-    resetGame();
-    updateUI();
-    showMessage('Tudo reiniciado!', '#66bb6a');
-}
 
 function resetGame() {
     state.health = 100;
     state.charge = 0;
     state.doubleDamage = false;
     state.ignoreNext = false;
+    state.noAttackThisTurn = false;
 }
 
 function updateUI() {
-    // Classe
     document.getElementById('class-circle').className = `circle ${state.class}`;
     document.getElementById('class-name').textContent = state.class.charAt(0).toUpperCase() + state.class.slice(1);
 
-    // Vida
     const hpPerc = state.health / state.maxHealth * 100;
     const hpFill = document.getElementById('health-fill');
     hpFill.style.width = hpPerc + '%';
     hpFill.style.background = hpPerc > 60 ? '#66bb6a' : hpPerc > 30 ? '#ffca28' : '#e53935';
     document.getElementById('health-text').textContent = `${Math.floor(state.health)} / ${state.maxHealth}`;
 
-    // Carga
     document.getElementById('charge-fill').style.width = state.charge + '%';
     document.getElementById('charge-text').textContent = `${state.charge}%`;
 
-    // Botão habilidade
     const btn = document.getElementById('skill-btn');
     if (state.charge >= 100) {
         btn.style.display = 'block';
@@ -409,6 +416,10 @@ function updateUI() {
     } else {
         btn.style.display = 'none';
     }
+
+    // Desativa botão de ataque se for Teleportador e usou habilidade
+    document.getElementById('attack-btn').style.opacity = state.noAttackThisTurn ? '0.5' : '1';
+    document.getElementById('attack-btn').style.pointerEvents = state.noAttackThisTurn ? 'none' : 'auto';
 }
 
 function showMessage(text, color) {
