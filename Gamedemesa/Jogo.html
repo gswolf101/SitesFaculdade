@@ -1,153 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracker de Jogo - Classes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Tracker - Jogo de Tampinhas</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
-            color: white;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            color: #fff;
             min-height: 100vh;
+            touch-action: manipulation;
+        }
+
+        #container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin: 16px 0;
+            font-size: 1.7rem;
+        }
+
+        .square {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 8px;
+            border: 4px solid #ddd;
+            border-radius: 16px;
             display: flex;
+            align-items: center;
             justify-content: center;
         }
-        #container {
-            width: 100%;
-            max-width: 420px;
-            padding: 15px;
-        }
-        h1, h2 { text-align: center; margin: 20px 0; }
-        .square {
-            width: 110px; height: 110px;
-            border: 4px solid #fff; border-radius: 18px;
-            margin: 0 auto 8px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .circle { width: 65px; height: 65px; border-radius: 50%; }
-        .cultista { background: #ffffff; }
-        .ladino    { background: #ff0000; }
-        .guerreiro { background: #008000; }
 
-        #start-screen { display: flex; flex-direction: column; gap: 24px; }
-        .class-card {
-            background: rgba(255,255,255,0.1);
-            padding: 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.2s;
+        .circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
         }
-        .class-card:active { transform: scale(0.98); background: rgba(255,255,255,0.2); }
+
+        .cultista { background: #ffffff; }
+        .ladino    { background: #e53935; }
+        .guerreiro { background: #43a047; }
+
+        .class-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.15s;
+            user-select: none;
+        }
+
+        .class-card:active {
+            background: rgba(255,255,255,0.18);
+            transform: scale(0.98);
+        }
 
         .bar {
-            height: 24px; background: rgba(255,255,255,0.15);
-            border-radius: 12px; overflow: hidden; margin: 8px 0 4px;
+            height: 28px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 14px;
+            overflow: hidden;
+            margin: 8px 0 4px;
         }
-        .fill { height: 100%; transition: width 0.4s ease; }
+
+        .fill {
+            height: 100%;
+            transition: width 0.4s ease;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: 14px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.9);
+            color: #111;
+        }
 
         button {
-            width: 100%; padding: 14px;
+            width: 100%;
+            padding: 16px;
             margin: 8px 0;
-            border: none; border-radius: 10px;
-            font-weight: bold; font-size: 16px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
             cursor: pointer;
+            transition: transform 0.1s;
+            touch-action: manipulation;
         }
-        #attack-btn     { background: #ff9800; color: white; }
-        #skill-btn      { display: none; }
-        #apply-damage   { background: #2196f3; color: white; width: auto; padding: 14px 24px; }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        #attack-btn     { background: #fb8c00; color: white; }
+        #apply-damage   { background: #1976d2; color: white; padding: 16px 28px; width: auto; }
+        #skill-btn      { display: none; font-size: 1.2rem; }
         .bottom-buttons { display: flex; gap: 12px; }
-        .bottom-buttons button { flex: 1; }
+        .bottom-buttons button { flex: 1; padding: 16px; }
 
         .modal {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.9);
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
             display: none;
             place-items: center;
             z-index: 1000;
         }
+
         .modal-content {
-            background: #111;
-            padding: 30px 24px;
-            border-radius: 16px;
-            width: 86%;
-            max-width: 340px;
+            background: #0f0f0f;
+            padding: 32px 24px;
+            border-radius: 20px;
+            width: 88%;
+            max-width: 360px;
             text-align: center;
         }
+
         #initiative-number {
-            font-size: 80px;
+            font-size: 5.5rem;
             font-weight: bold;
-            color: #ffd700;
+            color: #ffeb3b;
             margin: 20px 0;
+            text-shadow: 0 0 20px #ffeb3b66;
         }
 
         #message {
-            position: fixed; top: 20px; left: 50%;
+            position: fixed;
+            top: 16px;
+            left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.88);
             padding: 14px 24px;
-            border-radius: 10px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
             opacity: 0;
             transition: opacity 0.4s;
             z-index: 999;
+            max-width: 92%;
+            text-align: center;
             pointer-events: none;
-            max-width: 90%;
         }
+
         #message.show { opacity: 1; }
+
+        .rules-list {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin: 16px 0;
+            text-align: left;
+        }
+
+        .rules-list li {
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
 
 <div id="container">
 
+    <!-- Tela inicial -->
     <div id="start-screen">
         <h1>Escolha sua Classe</h1>
-        
+
         <div class="class-card" data-class="cultista">
             <div class="square"><div class="circle cultista"></div></div>
             <h2>Cultista</h2>
         </div>
+
         <div class="class-card" data-class="ladino">
             <div class="square"><div class="circle ladino"></div></div>
             <h2>Ladino</h2>
         </div>
+
         <div class="class-card" data-class="guerreiro">
             <div class="square"><div class="circle guerreiro"></div></div>
             <h2>Guerreiro</h2>
         </div>
+
+        <button id="rules-btn" style="background:#7e57c2; color:white;">Regras do Jogo</button>
     </div>
 
+    <!-- Tela do jogo -->
     <div id="game-screen" style="display:none;">
-        <div style="text-align:center;">
+        <div style="text-align:center; margin-bottom:16px;">
             <div class="square"><div class="circle" id="class-circle"></div></div>
             <h1 id="class-name">—</h1>
         </div>
 
         <div>
-            <strong>Vida:</strong>
-            <div class="bar"><div class="fill" id="health-fill" style="background:#4caf50;"></div></div>
-            <div id="health-text" style="text-align:center;">100 / 100</div>
+            <strong>Vida</strong>
+            <div class="bar"><div class="fill" id="health-fill" style="background:#66bb6a;"></div></div>
+            <div id="health-text" style="text-align:center; font-size:1.2rem;">100 / 100</div>
         </div>
 
-        <div style="display:flex; gap:10px; margin:12px 0;">
-            <input type="number" id="damage-input" placeholder="Dano recebido" min="0" style="flex:1; padding:12px; border-radius:8px; border:none;">
+        <div style="display:flex; gap:10px; margin:16px 0;">
+            <input type="number" id="damage-input" placeholder="Dano recebido" min="0" />
             <button id="apply-damage">Aplicar</button>
         </div>
 
         <div>
-            <strong>Carga de Habilidade:</strong>
-            <div class="bar"><div class="fill" id="charge-fill" style="background:#2196f3;"></div></div>
-            <div id="charge-text" style="text-align:center;">0%</div>
+            <strong>Carga de Habilidade</strong>
+            <div class="bar"><div class="fill" id="charge-fill" style="background:#42a5f5;"></div></div>
+            <div id="charge-text" style="text-align:center; font-size:1.1rem;">0%</div>
         </div>
 
         <button id="attack-btn">Ataque Realizado</button>
         <button id="skill-btn">Usar Habilidade</button>
 
         <div class="bottom-buttons">
-            <button id="reset-btn" style="background:#f44336;">Reiniciar</button>
-            <button id="back-btn" style="background:#757575;">Voltar</button>
+            <button id="reset-btn" style="background:#e53935;">Reiniciar</button>
+            <button id="back-btn" style="background:#616161;">Voltar</button>
         </div>
     </div>
 </div>
@@ -157,13 +238,29 @@
     <div class="modal-content">
         <h2>Sua Iniciativa</h2>
         <div id="initiative-number">??</div>
-        <button id="ok-initiative" style="background:#4caf50; color:white; padding:16px 60px; font-size:18px;">OK</button>
+        <button id="ok-initiative" style="background:#66bb6a; color:white; padding:18px 80px; font-size:1.3rem; margin-top:16px;">OK</button>
+    </div>
+</div>
+
+<!-- Modal Regras -->
+<div id="rules-modal" class="modal">
+    <div class="modal-content">
+        <h2>Regras do Jogo</h2>
+        <ul class="rules-list">
+            <li><strong>A ordem é decidida pelo número menor para o maior</strong></li>
+            <li><strong>Caiu da mesa perde 10 de vida</strong></li>
+            <li><strong>O jogador deve usar apenas uma mão para se movimentar, seja criativo, mas sem usar objetos, apenas a sua mão</strong></li>
+            <li><strong>O dano é aplicado quando uma tampinha acertar a outra</strong></li>
+            <li><strong>Ao ativar a habilidade o jogador deve anunciar que irá usá-la</strong></li>
+        </ul>
+        <button id="close-rules" style="background:#e53935; color:white; padding:16px 60px; margin-top:20px;">Fechar</button>
     </div>
 </div>
 
 <div id="message"></div>
 
 <script>
+// Estado do jogo
 const state = {
     class: null,
     health: 100,
@@ -175,34 +272,34 @@ const state = {
 
 const colors = {
     cultista: '#ffffff',
-    ladino: '#ff0000',
-    guerreiro: '#008000'
+    ladino: '#e53935',
+    guerreiro: '#43a047'
 };
 
 const skillMessages = {
-    cultista: "Você perde 20% da vida, mas o próximo ataque causa 2× dano!",
+    cultista: "Sacrificar! Perde 20% da vida, próximo ataque causa 2× dano!",
     ladino: "Agora você pode fazer dois movimentos!",
     guerreiro: "Você ignorará o próximo ataque recebido!"
 };
 
-const startScreen    = document.getElementById('start-screen');
-const gameScreen     = document.getElementById('game-screen');
+const startScreen = document.getElementById('start-screen');
+const gameScreen = document.getElementById('game-screen');
 const initiativeModal = document.getElementById('initiative-modal');
 const initiativeNumber = document.getElementById('initiative-number');
-const messageDiv     = document.getElementById('message');
+const rulesModal = document.getElementById('rules-modal');
+const messageDiv = document.getElementById('message');
 
 // Clique nas classes
 document.querySelectorAll('.class-card').forEach(card => {
     card.addEventListener('click', () => {
         state.class = card.dataset.class;
-        
         const rnd = Math.floor(Math.random() * 100) + 1;
         initiativeNumber.textContent = rnd;
-        initiativeModal.style.display = 'flex';
+        initiativeModal.style.display = 'grid';
     });
 });
 
-// OK → vai para jogo
+// OK da iniciativa
 document.getElementById('ok-initiative').addEventListener('click', () => {
     initiativeModal.style.display = 'none';
     startScreen.style.display = 'none';
@@ -211,11 +308,19 @@ document.getElementById('ok-initiative').addEventListener('click', () => {
     updateUI();
 });
 
-// Aplicar dano
+// Regras
+document.getElementById('rules-btn').addEventListener('click', () => {
+    rulesModal.style.display = 'grid';
+});
+
+document.getElementById('close-rules').addEventListener('click', () => {
+    rulesModal.style.display = 'none';
+});
+
+// Aplicar dano recebido
 document.getElementById('apply-damage').addEventListener('click', () => {
     const dmg = Number(document.getElementById('damage-input').value) || 0;
     document.getElementById('damage-input').value = '';
-
     if (dmg <= 0) return;
 
     if (state.ignoreNext) {
@@ -223,12 +328,12 @@ document.getElementById('apply-damage').addEventListener('click', () => {
         state.ignoreNext = false;
     } else {
         state.health = Math.max(0, state.health - dmg);
-        showMessage(`-${dmg} de dano recebido`, '#ff5252');
+        showMessage(`-${dmg} de dano`, '#ff5252');
     }
     updateUI();
 });
 
-// Ataque realizado
+// Ataque realizado (avança turno)
 document.getElementById('attack-btn').addEventListener('click', () => {
     const dmg = state.doubleDamage ? 20 : 10;
     state.doubleDamage = false;
@@ -260,16 +365,17 @@ document.getElementById('skill-btn').addEventListener('click', () => {
 });
 
 // Reiniciar / Voltar
-document.getElementById('reset-btn').addEventListener('click', () => {
-    resetGame();
-    updateUI();
-    showMessage('Tudo reiniciado!', '#4caf50');
-});
-
+document.getElementById('reset-btn').addEventListener('click', resetGameAndUpdate);
 document.getElementById('back-btn').addEventListener('click', () => {
     gameScreen.style.display = 'none';
-    startScreen.style.display = 'flex';
+    startScreen.style.display = 'block';
 });
+
+function resetGameAndUpdate() {
+    resetGame();
+    updateUI();
+    showMessage('Tudo reiniciado!', '#66bb6a');
+}
 
 function resetGame() {
     state.health = 100;
@@ -284,10 +390,10 @@ function updateUI() {
     document.getElementById('class-name').textContent = state.class.charAt(0).toUpperCase() + state.class.slice(1);
 
     // Vida
-    const hpPerc = (state.health / state.maxHealth) * 100;
-    document.getElementById('health-fill').style.width = hpPerc + '%';
-    let hpColor = hpPerc > 60 ? '#4caf50' : hpPerc > 30 ? '#ffeb3b' : '#f44336';
-    document.getElementById('health-fill').style.background = hpColor;
+    const hpPerc = state.health / state.maxHealth * 100;
+    const hpFill = document.getElementById('health-fill');
+    hpFill.style.width = hpPerc + '%';
+    hpFill.style.background = hpPerc > 60 ? '#66bb6a' : hpPerc > 30 ? '#ffca28' : '#e53935';
     document.getElementById('health-text').textContent = `${Math.floor(state.health)} / ${state.maxHealth}`;
 
     // Carga
@@ -299,7 +405,7 @@ function updateUI() {
     if (state.charge >= 100) {
         btn.style.display = 'block';
         btn.textContent = state.class === 'cultista' ? 'Sacrificar' : 'Usar Habilidade';
-        btn.style.background = colors[state.class];
+        btn.style.backgroundColor = colors[state.class];
     } else {
         btn.style.display = 'none';
     }
@@ -309,7 +415,7 @@ function showMessage(text, color) {
     messageDiv.textContent = text;
     messageDiv.style.color = color;
     messageDiv.classList.add('show');
-    setTimeout(() => messageDiv.classList.remove('show'), 7000);
+    setTimeout(() => messageDiv.classList.remove('show'), 8000);
 }
 </script>
 </body>
