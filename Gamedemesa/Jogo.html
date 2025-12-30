@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>Tracker - Tampinhas</title>
+    <title>Tracker - Tampinhas Batalha</title>
     <style>
         * {
             margin: 0;
@@ -28,26 +28,35 @@
 
         h1 { font-size: 1.8rem; text-align: center; margin: 16px 0; }
 
-        .classes-grid {
+        .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin: 20px 0;
         }
 
-        .class-card {
+        .btn {
             background: rgba(255,255,255,0.06);
             border-radius: 16px;
-            padding: 12px;
+            padding: 16px;
             text-align: center;
             cursor: pointer;
             transition: all 0.15s;
             user-select: none;
+            border: none;
+            color: inherit;
+            font-size: 1.1rem;
+            font-weight: bold;
         }
 
-        .class-card:active {
+        .btn:active {
             background: rgba(255,255,255,0.14);
             transform: scale(0.97);
+        }
+
+        .btn.active {
+            background: rgba(255,255,255,0.25);
+            box-shadow: 0 4px 12px rgba(255,255,255,0.1);
         }
 
         .square {
@@ -72,12 +81,25 @@
         .guerreiro  { background: #43a047; }
         .teleportador { background: #0288d1; }
 
+        #class-section { display: none; }
+
         .bar {
             height: 26px;
             background: rgba(255,255,255,0.1);
             border-radius: 13px;
             overflow: hidden;
             margin: 8px 0 4px;
+        }
+
+        .health-bar.shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
         .fill {
@@ -96,16 +118,24 @@
             padding: 18px;
             font-size: 1.4rem;
             font-weight: bold;
-            border: none;
             border-radius: 12px;
             color: white;
             cursor: pointer;
+            border: none;
         }
 
         #dmg-10 { background: #7cb342; }
         #dmg-20 { background: #f4511e; }
+        #fell-off-table { 
+            width: 100%; 
+            background: #b71c1c !important; 
+            padding: 18px; 
+            margin: 12px 0; 
+            font-size: 1.3rem !important;
+            border-radius: 12px;
+        }
 
-        button {
+        button.big {
             width: 100%;
             padding: 16px;
             margin: 8px 0;
@@ -118,10 +148,25 @@
 
         #attack-btn     { background: #fb8c00; color: white; }
         #skill-btn      { display: none; font-size: 1.2rem; }
-        .bottom-buttons { display: flex; gap: 12px; }
-        .bottom-buttons button { flex: 1; padding: 16px; }
+        .bottom-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .bottom-buttons button { flex: 1; min-width: 48%; padding: 16px; }
 
-        /* Game Over Screen */
+        #turn-display {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ffeb3b;
+            text-shadow: 0 0 10px #ffeb3b55;
+        }
+
+        #player-switcher {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
         #game-over-screen {
             position: fixed;
             inset: 0;
@@ -197,6 +242,12 @@
         }
 
         #message.show { opacity: 1; }
+
+        #init-text {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -205,43 +256,60 @@
 
     <!-- Tela inicial -->
     <div id="start-screen">
-        <h1>Escolha sua Classe</h1>
+        <h1 id="start-title">Escolha o Jogador</h1>
 
-        <div class="classes-grid">
-            <div class="class-card" data-class="cultista">
-                <div class="square"><div class="circle cultista"></div></div>
-                <h2>Cultista</h2>
-            </div>
+        <div class="grid-2" id="player-selector">
+            <button class="btn player-btn" data-player="1">Jogador 1</button>
+            <button class="btn player-btn" data-player="2">Jogador 2</button>
+        </div>
 
-            <div class="class-card" data-class="ladino">
-                <div class="square"><div class="circle ladino"></div></div>
-                <h2>Ladino</h2>
-            </div>
+        <div id="class-section">
+            <h1 id="class-title">Escolha sua Classe para Jogador X</h1>
 
-            <div class="class-card" data-class="guerreiro">
-                <div class="square"><div class="circle guerreiro"></div></div>
-                <h2>Guerreiro</h2>
-            </div>
+            <div class="grid-2 classes-grid">
+                <div class="btn class-card" data-class="cultista">
+                    <div class="square"><div class="circle cultista"></div></div>
+                    <h2>Cultista</h2>
+                </div>
 
-            <div class="class-card" data-class="teleportador">
-                <div class="square"><div class="circle teleportador"></div></div>
-                <h2>Teleportador</h2>
+                <div class="btn class-card" data-class="ladino">
+                    <div class="square"><div class="circle ladino"></div></div>
+                    <h2>Ladino</h2>
+                </div>
+
+                <div class="btn class-card" data-class="guerreiro">
+                    <div class="square"><div class="circle guerreiro"></div></div>
+                    <h2>Guerreiro</h2>
+                </div>
+
+                <div class="btn class-card" data-class="teleportador">
+                    <div class="square"><div class="circle teleportador"></div></div>
+                    <h2>Teleportador</h2>
+                </div>
             </div>
         </div>
 
-        <button id="rules-btn" style="background:#7e57c2; color:white; padding:16px; font-size:1.1rem;">Regras do Jogo</button>
+        <button id="rules-btn" class="big" style="background:#7e57c2; color:white;">Regras do Jogo</button>
     </div>
 
     <!-- Tela do jogo -->
     <div id="game-screen" style="display:none;">
+        <div id="player-switcher">
+            <button class="btn player-btn" data-player="1">J1</button>
+            <button class="btn player-btn" data-player="2">J2</button>
+        </div>
+
+        <div id="turn-display">Turno: <span id="turn-num">0</span></div>
+
         <div style="text-align:center; margin-bottom:16px;">
             <div class="square"><div class="circle" id="class-circle"></div></div>
             <h1 id="class-name">—</h1>
+            <div id="init-text">Init: —</div>
         </div>
 
         <div>
             <strong>Vida</strong>
-            <div class="bar"><div class="fill" id="health-fill" style="background:#66bb6a;"></div></div>
+            <div class="bar health-bar"><div class="fill" id="health-fill" style="background:#66bb6a;"></div></div>
             <div id="health-text" style="text-align:center; font-size:1.3rem; margin-top:4px;">100 / 100</div>
         </div>
 
@@ -251,6 +319,7 @@
                 <button class="damage-btn" id="dmg-10">10</button>
                 <button class="damage-btn" id="dmg-20">20</button>
             </div>
+            <button id="fell-off-table" class="damage-btn">Caiu da Mesa (-10)</button>
         </div>
 
         <div style="margin: 20px 0;">
@@ -259,12 +328,12 @@
             <div id="charge-text" style="text-align:center; font-size:1.2rem;">0%</div>
         </div>
 
-        <button id="attack-btn">Ataque Realizado</button>
-        <button id="skill-btn">Usar Habilidade</button>
+        <button id="attack-btn" class="big">Ataque Realizado</button>
+        <button id="skill-btn" class="big">Usar Habilidade</button>
 
         <div class="bottom-buttons">
-            <button id="reset-btn" style="background:#e53935;">Reiniciar</button>
-            <button id="back-btn" style="background:#616161;">Voltar</button>
+            <button id="reset-btn" class="btn" style="background:#e53935;">Reset Jogador</button>
+            <button id="back-btn" class="btn" style="background:#616161;">Voltar</button>
         </div>
     </div>
 </div>
@@ -273,6 +342,7 @@
 <div id="game-over-screen">
     <div>
         <h1>GAME OVER</h1>
+        <p id="go-player">Jogador X</p>
         <p>Sua tampinha caiu... ou foi destruída!</p>
         <button id="back-to-menu">Voltar ao Menu</button>
     </div>
@@ -281,7 +351,7 @@
 <!-- Modal Iniciativa -->
 <div id="initiative-modal" class="modal">
     <div class="modal-content">
-        <h2>Sua Iniciativa</h2>
+        <h2>Iniciativa do Jogador X</h2>
         <div id="initiative-number">??</div>
         <button id="ok-initiative" style="background:#66bb6a; color:white; padding:18px 80px; font-size:1.4rem; margin-top:16px;">OK</button>
     </div>
@@ -289,12 +359,12 @@
 
 <!-- Modal Regras -->
 <div id="rules-modal" class="modal">
-    <div class="modal-content" style="text-align:left;">
+    <div class="modal-content" style="text-align:left; max-height:80vh; overflow-y:auto;">
         <h2 style="text-align:center;">Regras do Jogo</h2>
         <ul style="list-style:none; line-height:1.6; margin:20px 0; font-size:1.05rem;">
             <li>• A ordem é decidida pelo número menor para o maior</li>
             <li>• Caiu da mesa perde 10 de vida</li>
-            <li>• O jogador deve usar apenas **uma mão** para se movimentar, seja criativo, mas sem usar objetos, apenas a sua mão</li>
+            <li>• O jogador deve usar apenas <strong>uma mão</strong> para se movimentar, seja criativo, mas sem usar objetos, apenas a sua mão</li>
             <li>• O dano é aplicado quando uma tampinha acertar a outra</li>
             <li>• Ao ativar a habilidade o jogador deve anunciar que irá usá-la</li>
         </ul>
@@ -305,16 +375,12 @@
 <div id="message"></div>
 
 <script>
-// Estado do jogo
-const state = {
-    class: null,
-    health: 100,
-    maxHealth: 100,
-    charge: 0,
-    doubleDamage: false,
-    ignoreNext: false,
-    noAttackThisTurn: false
-};
+const PLAYER_KEY = 'tampinhas_players';
+const TURN_KEY = 'tampinhas_turn';
+
+let players = {};
+let currentPlayer = 1;
+let turn = 0;
 
 const colors = {
     cultista: '#ffffff',
@@ -324,7 +390,7 @@ const colors = {
 };
 
 const skillMessages = {
-    cultista: "Sacrificar! Perde 20% da vida, próximo ataque causa 2× dano!",
+    cultista: "Sacrificar! Perde 10% da vida, próximo ataque causa 2× dano!",
     ladino: "Agora você pode fazer dois movimentos!",
     guerreiro: "Você ignorará o próximo ataque recebido!",
     teleportador: "Teleportar! Pode colocar qualquer jogador em qualquer lugar da mesa (sem ataque neste turno)"
@@ -337,152 +403,254 @@ const elements = {
     initiativeModal: document.getElementById('initiative-modal'),
     initiativeNumber: document.getElementById('initiative-number'),
     rulesModal: document.getElementById('rules-modal'),
-    messageDiv: document.getElementById('message')
+    messageDiv: document.getElementById('message'),
+    healthBar: document.querySelector('.health-bar'),
+    healthFill: document.getElementById('health-fill'),
+    healthText: document.getElementById('health-text'),
+    classCircle: document.getElementById('class-circle'),
+    className: document.getElementById('class-name'),
+    initText: document.getElementById('init-text'),
+    chargeFill: document.getElementById('charge-fill'),
+    chargeText: document.getElementById('charge-text'),
+    attackBtn: document.getElementById('attack-btn'),
+    skillBtn: document.getElementById('skill-btn'),
+    turnNum: document.getElementById('turn-num'),
+    startTitle: document.getElementById('start-title'),
+    classTitle: document.getElementById('class-title'),
+    playerSelector: document.getElementById('player-selector'),
+    classSection: document.getElementById('class-section'),
+    goPlayer: document.getElementById('go-player')
 };
 
-// Seleção de classe
-document.querySelectorAll('.class-card').forEach(card => {
-    card.addEventListener('click', () => {
-        state.class = card.dataset.class;
-        const rnd = Math.floor(Math.random() * 100) + 1;
-        elements.initiativeNumber.textContent = rnd;
-        elements.initiativeModal.style.display = 'grid';
+function initApp() {
+    loadData();
+    updateStartTitle();
+    document.getElementById('turn-num').textContent = turn;
+}
+
+function loadData() {
+    const savedPlayers = localStorage.getItem(PLAYER_KEY);
+    if (savedPlayers) {
+        players = JSON.parse(savedPlayers);
+    } else {
+        players = {
+            1: {class: null, health: 100, maxHealth: 100, charge: 0, doubleDamage: false, ignoreNext: false, noAttackThisTurn: false, initiative: 0},
+            2: {class: null, health: 100, maxHealth: 100, charge: 0, doubleDamage: false, ignoreNext: false, noAttackThisTurn: false, initiative: 0}
+        };
+    }
+    turn = parseInt(localStorage.getItem(TURN_KEY) || '0');
+}
+
+function saveData() {
+    localStorage.setItem(PLAYER_KEY, JSON.stringify(players));
+    localStorage.setItem(TURN_KEY, turn.toString());
+}
+
+// Player selection in start
+document.querySelectorAll('#player-selector .player-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentPlayer = parseInt(btn.dataset.player);
+        elements.playerSelector.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        elements.classSection.style.display = 'block';
+        updateStartTitle();
+        saveData();
     });
 });
 
-// OK iniciativa
+// Class selection
+document.querySelectorAll('.class-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const playerState = getCurrentState();
+        playerState.class = card.dataset.class;
+        const rnd = Math.floor(Math.random() * 100) + 1;
+        playerState.initiative = rnd;
+        elements.initiativeNumber.textContent = rnd;
+        document.querySelector('#initiative-modal h2').textContent = `Iniciativa do Jogador ${currentPlayer}`;
+        elements.initiativeModal.style.display = 'grid';
+        saveData();
+    });
+});
+
+// OK initiative
 document.getElementById('ok-initiative').addEventListener('click', () => {
     elements.initiativeModal.style.display = 'none';
     elements.startScreen.style.display = 'none';
     elements.gameScreen.style.display = 'block';
-    resetGame();
     updateUI();
+});
+
+// Player switch in game
+document.querySelectorAll('#player-switcher .player-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentPlayer = parseInt(btn.dataset.player);
+        document.querySelectorAll('#player-switcher .player-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateUI();
+        checkGameOver();
+    });
 });
 
 // Regras
 document.getElementById('rules-btn').addEventListener('click', () => elements.rulesModal.style.display = 'grid');
 document.getElementById('close-rules').addEventListener('click', () => elements.rulesModal.style.display = 'none');
 
-// Dano recebido
-document.getElementById('dmg-10').addEventListener('click', () => applyDamage(10));
-document.getElementById('dmg-20').addEventListener('click', () => applyDamage(20));
+// Damage
+document.getElementById('dmg-10').addEventListener('click', () => takeDamage(10, 'Dano normal'));
+document.getElementById('dmg-20').addEventListener('click', () => takeDamage(20, 'Dano crítico'));
+document.getElementById('fell-off-table').addEventListener('click', () => takeDamage(10, 'CAIU DA MESA!'));
 
-function applyDamage(dmg) {
-    if (state.ignoreNext) {
+function takeDamage(dmg, reason) {
+    const playerState = getCurrentState();
+    if (playerState.ignoreNext) {
         showMessage("Ataque ignorado!", colors.guerreiro);
-        state.ignoreNext = false;
+        playerState.ignoreNext = false;
     } else {
-        state.health = Math.max(0, state.health - dmg);
-        showMessage(`-${dmg} de dano`, '#ff7043');
+        playerState.health = Math.max(0, playerState.health - dmg);
+        showMessage(`${reason} -${dmg} HP`, '#ff7043');
+        triggerShake();
     }
+    saveData();
     checkGameOver();
     updateUI();
 }
 
-// Ataque realizado
-document.getElementById('attack-btn').addEventListener('click', () => {
-    if (state.noAttackThisTurn) {
-        showMessage("Não pode atacar após usar Teleportar!", '#ff7043');
+function getCurrentState() {
+    return players[currentPlayer];
+}
+
+// Attack
+elements.attackBtn.addEventListener('click', () => {
+    const playerState = getCurrentState();
+    if (playerState.noAttackThisTurn) {
+        showMessage("Não pode atacar após Teleportar!", '#ff7043');
         return;
     }
-
-    const dmg = state.doubleDamage ? 20 : 10;
-    state.doubleDamage = false;
-    state.charge = Math.min(100, state.charge + 20);
-    state.noAttackThisTurn = false;
-    showMessage(`Ataque! Dano causado: ${dmg}`, colors[state.class]);
+    const dmg = playerState.doubleDamage ? 20 : 10;
+    playerState.doubleDamage = false;
+    playerState.charge = Math.min(100, playerState.charge + 20);
+    playerState.noAttackThisTurn = false;
+    turn++;
+    elements.turnNum.textContent = turn;
+    showMessage(`Ataque! Dano causado: ${dmg}`, colors[playerState.class]);
+    saveData();
     updateUI();
 });
 
-// Usar habilidade
-document.getElementById('skill-btn').addEventListener('click', () => {
-    if (state.charge < 100) return;
-    state.charge = 0;
+// Skill
+elements.skillBtn.addEventListener('click', () => {
+    const playerState = getCurrentState();
+    if (playerState.charge < 100) return;
+    playerState.charge = 0;
+    const color = colors[playerState.class];
+    const msg = skillMessages[playerState.class];
 
-    const color = colors[state.class];
-    const msg = skillMessages[state.class];
-
-    if (state.class === 'cultista') {
-        const sac = Math.floor(state.maxHealth * 0.2);
-        state.health = Math.max(0, state.health - sac);
-        state.doubleDamage = true;
+    if (playerState.class === 'cultista') {
+        const sac = Math.floor(playerState.maxHealth * 0.10);
+        playerState.health = Math.max(0, playerState.health - sac);
+        playerState.doubleDamage = true;
         showMessage(`${msg} (-${sac} HP)`, color);
-    } else if (state.class === 'ladino') {
+        triggerShake();
+    } else if (playerState.class === 'ladino') {
         showMessage(msg, color);
-    } else if (state.class === 'guerreiro') {
-        state.ignoreNext = true;
+    } else if (playerState.class === 'guerreiro') {
+        playerState.ignoreNext = true;
         showMessage(msg, color);
-    } else if (state.class === 'teleportador') {
-        state.noAttackThisTurn = true;
+    } else if (playerState.class === 'teleportador') {
+        playerState.noAttackThisTurn = true;
         showMessage(msg, color);
     }
 
+    saveData();
     checkGameOver();
     updateUI();
 });
 
-// Game Over check
+function triggerShake() {
+    elements.healthBar.classList.remove('shake');
+    void elements.healthBar.offsetWidth;
+    elements.healthBar.classList.add('shake');
+}
+
 function checkGameOver() {
-    if (state.health <= 0) {
+    const playerState = getCurrentState();
+    if (playerState.health <= 0 && playerState.class) {
+        elements.goPlayer.textContent = `Jogador ${currentPlayer}`;
         elements.gameScreen.style.display = 'none';
         elements.gameOverScreen.style.display = 'grid';
     }
 }
 
-// Game Over → voltar ao menu
+// Game Over click
 elements.gameOverScreen.addEventListener('click', returnToStart);
 document.getElementById('back-to-menu').addEventListener('click', returnToStart);
 
 function returnToStart() {
     elements.gameOverScreen.style.display = 'none';
     elements.startScreen.style.display = 'block';
-    resetGame();
+    // Don't reset player state here
 }
 
-// Reiniciar / Voltar
+// Reset current player
 document.getElementById('reset-btn').addEventListener('click', () => {
-    resetGame();
+    players[currentPlayer] = {
+        class: players[currentPlayer].class, // Keep class and init
+        health: 100,
+        maxHealth: 100,
+        charge: 0,
+        doubleDamage: false,
+        ignoreNext: false,
+        noAttackThisTurn: false,
+        initiative: players[currentPlayer].initiative
+    };
+    saveData();
     updateUI();
-    showMessage('Tudo reiniciado!', '#66bb6a');
+    showMessage('Jogador reiniciado!', '#66bb6a');
 });
 
+// Back to menu
 document.getElementById('back-btn').addEventListener('click', () => {
     elements.gameScreen.style.display = 'none';
     elements.startScreen.style.display = 'block';
 });
 
-function resetGame() {
-    state.health = 100;
-    state.charge = 0;
-    state.doubleDamage = false;
-    state.ignoreNext = false;
-    state.noAttackThisTurn = false;
+function updateStartTitle() {
+    elements.startTitle.textContent = `Escolha o Jogador`;
+    elements.classTitle.textContent = `Escolha sua Classe para Jogador ${currentPlayer}`;
 }
 
 function updateUI() {
-    document.getElementById('class-circle').className = `circle ${state.class}`;
-    document.getElementById('class-name').textContent = state.class.charAt(0).toUpperCase() + state.class.slice(1);
+    const playerState = getCurrentState();
+    if (!playerState.class) return;
 
-    const hpPerc = state.health / state.maxHealth * 100;
-    const hpFill = document.getElementById('health-fill');
-    hpFill.style.width = hpPerc + '%';
-    hpFill.style.background = hpPerc > 60 ? '#66bb6a' : hpPerc > 30 ? '#ffca28' : '#e53935';
-    document.getElementById('health-text').textContent = `${Math.floor(state.health)} / ${state.maxHealth}`;
+    elements.classCircle.className = `circle ${playerState.class}`;
+    elements.className.textContent = playerState.class.charAt(0).toUpperCase() + playerState.class.slice(1);
+    elements.initText.textContent = `Init: ${playerState.initiative}`;
 
-    document.getElementById('charge-fill').style.width = state.charge + '%';
-    document.getElementById('charge-text').textContent = `${state.charge}%`;
+    const hpPerc = playerState.health / playerState.maxHealth * 100;
+    elements.healthFill.style.width = hpPerc + '%';
+    elements.healthFill.style.background = hpPerc > 60 ? '#66bb6a' : hpPerc > 30 ? '#ffca28' : '#e53935';
+    elements.healthText.textContent = `${Math.floor(playerState.health)} / ${playerState.maxHealth}`;
 
-    const btn = document.getElementById('skill-btn');
-    if (state.charge >= 100) {
+    elements.chargeFill.style.width = playerState.charge + '%';
+    elements.chargeText.textContent = `${playerState.charge}%`;
+
+    const btn = elements.skillBtn;
+    if (playerState.charge >= 100) {
         btn.style.display = 'block';
-        btn.textContent = state.class === 'cultista' ? 'Sacrificar' : 'Usar Habilidade';
-        btn.style.backgroundColor = colors[state.class];
+        btn.textContent = playerState.class === 'cultista' ? 'Sacrificar' : 'Usar Habilidade';
+        btn.style.backgroundColor = colors[playerState.class];
     } else {
         btn.style.display = 'none';
     }
 
-    document.getElementById('attack-btn').style.opacity = state.noAttackThisTurn ? '0.5' : '1';
-    document.getElementById('attack-btn').style.pointerEvents = state.noAttackThisTurn ? 'none' : 'auto';
+    elements.attackBtn.style.opacity = playerState.noAttackThisTurn ? '0.5' : '1';
+    elements.attackBtn.style.pointerEvents = playerState.noAttackThisTurn ? 'none' : 'auto';
+
+    // Update player switcher active
+    document.querySelectorAll('#player-switcher .player-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.player) === currentPlayer);
+    });
 }
 
 function showMessage(text, color) {
@@ -491,6 +659,8 @@ function showMessage(text, color) {
     elements.messageDiv.classList.add('show');
     setTimeout(() => elements.messageDiv.classList.remove('show'), 8000);
 }
+
+initApp();
 </script>
 </body>
 </html>
