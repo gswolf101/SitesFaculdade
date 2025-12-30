@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,285 +5,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tracker de Jogo - Classes</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
             color: white;
             height: 100vh;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
         #container {
             width: 100vw;
             height: 100vh;
             max-width: 400px;
             padding: 20px;
             overflow-y: auto;
-            background: rgba(0,0,0,0.1);
         }
-
-        h1, h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
+        h1, h2 { text-align: center; margin-bottom: 20px; }
         .square {
-            width: 120px;
-            height: 120px;
-            border: 4px solid #fff;
-            border-radius: 20px;
+            width: 120px; height: 120px;
+            border: 4px solid #fff; border-radius: 20px;
             margin: 0 auto 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
         }
-
         .circle {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            width: 70px; height: 70px; border-radius: 50%;
         }
-
         .cultista { background-color: #ffffff; }
         .ladino { background-color: #ff0000; }
         .guerreiro { background-color: #008000; }
-
-        #start-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
+        #start-screen { display: flex; flex-direction: column; gap: 25px; align-items: center; }
         .class-card {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.12);
             padding: 20px;
             border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
             width: 100%;
             text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .class-card:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-5px);
-        }
-
-        #rules-btn {
-            padding: 12px 24px;
-            background: #673ab7;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
+            transition: all 0.25s;
         }
-
-        #game-screen {
+        .class-card:active { transform: scale(0.97); background: rgba(255,255,255,0.25); }
+        #rules-btn { padding: 12px 30px; background: #673ab7; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; }
+        
+        /* Modais */
+        .modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.9);
             display: none;
-            flex-direction: column;
-            height: 100%;
-            gap: 20px;
+            justify-content: center; align-items: center;
+            z-index: 1000;
         }
-
-        /* Modal de iniciativa */
-        #initiative-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
         .modal-content {
-            background: #222;
-            padding: 40px 30px;
+            background: #1a1a1a;
+            padding: 30px;
             border-radius: 16px;
-            text-align: center;
-            width: 90%;
+            width: 85%;
             max-width: 340px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
         }
-
-        .modal-content h2 {
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
         #initiative-number {
-            font-size: 72px;
+            font-size: 80px;
             font-weight: bold;
             color: #ffd700;
             margin: 20px 0;
-            text-shadow: 0 0 15px #ffd70088;
         }
-
-        .modal-btn {
-            padding: 14px 40px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
+        button.modal-btn {
+            padding: 14px 50px;
+            margin: 15px 5px 0;
+            border: none; border-radius: 10px;
+            font-size: 18px; font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
         }
-
-        /* Modal de regras */
-        #rules-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .rules-content {
-            background: #222;
-            padding: 30px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 360px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .rules-content ul {
-            list-style: none;
-            font-size: 17px;
-            line-height: 1.6;
-        }
-
-        .rules-content li {
-            margin-bottom: 16px;
-        }
-
-        .close-btn {
-            background: #f44336;
-            margin-top: 20px;
-        }
-
-        /* ... resto do CSS continua igual ao anterior ... */
+        #ok-initiative { background: #4CAF50; color: white; }
+        #close-rules { background: #f44336; color: white; }
+        
+        /* ... o resto do CSS da tela de jogo continua igual ao anterior ... */
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="start-screen">
-            <h1>Escolha sua Classe</h1>
-            <div class="class-card" data-class="cultista">
-                <div class="square">
-                    <div class="circle cultista"></div>
-                </div>
-                <h2>Cultista</h2>
-            </div>
-            <div class="class-card" data-class="ladino">
-                <div class="square">
-                    <div class="circle ladino"></div>
-                </div>
-                <h2>Ladino</h2>
-            </div>
-            <div class="class-card" data-class="guerreiro">
-                <div class="square">
-                    <div class="circle guerreiro"></div>
-                </div>
-                <h2>Guerreiro</h2>
-            </div>
 
-            <button id="rules-btn">Regras</button>
+<div id="container">
+    <div id="start-screen">
+        <h1>Escolha sua Classe</h1>
+        
+        <div class="class-card" data-class="cultista">
+            <div class="square"><div class="circle cultista"></div></div>
+            <h2>Cultista</h2>
+        </div>
+        
+        <div class="class-card" data-class="ladino">
+            <div class="square"><div class="circle ladino"></div></div>
+            <h2>Ladino</h2>
+        </div>
+        
+        <div class="class-card" data-class="guerreiro">
+            <div class="square"><div class="circle guerreiro"></div></div>
+            <h2>Guerreiro</h2>
         </div>
 
-        <div id="game-screen">
-            <!-- ... conteúdo da tela de jogo continua igual ... -->
-        </div>
+        <button id="rules-btn">Regras</button>
     </div>
 
-    <!-- Modal de Iniciativa -->
-    <div id="initiative-modal">
-        <div class="modal-content">
-            <h2>Sua Iniciativa</h2>
-            <div id="initiative-number">??</div>
-            <button class="modal-btn" id="ok-initiative">OK</button>
-        </div>
+    <!-- Tela do jogo (mantém o conteúdo anterior) -->
+    <div id="game-screen" style="display:none; flex-direction:column; height:100%; gap:20px;">
+        <!-- Coloque aqui todo o conteúdo da tela de jogo que estava antes -->
+        <!-- Barra de vida, input de dano, botões, etc. -->
     </div>
+</div>
 
-    <!-- Modal de Regras -->
-    <div id="rules-modal">
-        <div class="rules-content">
-            <h2>Regras do Jogo</h2>
-            <ul>
-                <li><strong>A ordem é decidida pelo número menor para o maior</strong></li>
-                <li><strong>Caiu da mesa perde 10 de vida</strong></li>
-            </ul>
-            <button class="modal-btn close-btn" id="close-rules">Fechar</button>
-        </div>
+<!-- Modal Iniciativa -->
+<div id="initiative-modal" class="modal">
+    <div class="modal-content">
+        <h2>Sua Iniciativa</h2>
+        <div id="initiative-number">??</div>
+        <button class="modal-btn" id="ok-initiative">OK</button>
     </div>
+</div>
 
-    <div id="message"></div>
+<!-- Modal Regras -->
+<div id="rules-modal" class="modal">
+    <div class="modal-content">
+        <h2>Regras</h2>
+        <ul style="text-align:left; margin:20px 0; line-height:1.6;">
+            <li><strong>A ordem é decidida pelo número menor para o maior</strong></li>
+            <li><strong>Caiu da mesa perde 10 de vida</strong></li>
+        </ul>
+        <button class="modal-btn" id="close-rules">Fechar</button>
+    </div>
+</div>
 
-    <script>
-        // ... (o objeto state e colors continuam iguais) ...
+<script>
+// Variáveis principais
+const startScreen = document.getElementById('start-screen');
+const gameScreen = document.getElementById('game-screen');
+const initiativeModal = document.getElementById('initiative-modal');
+const initiativeNumber = document.getElementById('initiative-number');
+const rulesModal = document.getElementById('rules-modal');
 
-        const initiativeModal = document.getElementById('initiative-modal');
-        const initiativeNumber = document.getElementById('initiative-number');
-        const okInitiative = document.getElementById('ok-initiative');
+// Clique nas classes
+document.querySelectorAll('.class-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+        e.preventDefault(); // segurança extra
+        const selectedClass = this.getAttribute('data-class');
+        
+        // Gera iniciativa
+        const randomInit = Math.floor(Math.random() * 100) + 1;
+        initiativeNumber.textContent = randomInit;
+        
+        // Mostra modal
+        initiativeModal.style.display = 'flex';
+        
+        // Salva a classe escolhida (você pode usar uma variável global ou state)
+        window.selectedClass = selectedClass;
+    });
+});
 
-        const rulesModal = document.getElementById('rules-modal');
-        const rulesBtn = document.getElementById('rules-btn');
-        const closeRules = document.getElementById('close-rules');
+// OK da iniciativa → vai pra tela do jogo
+document.getElementById('ok-initiative').addEventListener('click', () => {
+    initiativeModal.style.display = 'none';
+    startScreen.style.display = 'none';
+    gameScreen.style.display = 'flex';
+    
+    // Aqui você pode usar window.selectedClass para personalizar a tela do jogo
+    console.log('Classe selecionada:', window.selectedClass);
+    // Atualize a UI do jogo com a classe escolhida
+});
 
-        // Mostrar regras
-        rulesBtn.addEventListener('click', () => {
-            rulesModal.style.display = 'flex';
-        });
-
-        closeRules.addEventListener('click', () => {
-            rulesModal.style.display = 'none';
-        });
-
-        // Seleção de classe → gera iniciativa
-        document.querySelectorAll('.class-card').forEach(card => {
-            card.addEventListener('click', () => {
-                state.class = card.dataset.class;
-                resetGame();
-
-                // Gera número aleatório de 1 a 100
-                const randomInit = Math.floor(Math.random() * 100) + 1;
-                initiativeNumber.textContent = randomInit;
-
-                // Mostra modal de iniciativa
-                initiativeModal.style.display = 'flex';
-            });
-        });
-
-        // Fecha modal de iniciativa e mostra tela do jogo
-        okInitiative.addEventListener('click', () => {
-            initiativeModal.style.display = 'none';
-            updateUI();
-            startScreen.style.display = 'none';
-            gameScreen.style.display = 'flex';
-        });
-
-        // ... (todo o resto do JavaScript continua exatamente igual ao anterior) ...
-    </script>
+// Regras
+document.getElementById('rules-btn').addEventListener('click', () => {
+    rulesModal.style.display = 'flex';
+});
+document.getElementById('close-rules').addEventListener('click', () => {
+    rulesModal.style.display = 'none';
+});
+</script>
 </body>
 </html>
