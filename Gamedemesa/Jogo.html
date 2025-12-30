@@ -121,6 +121,38 @@
         .bottom-buttons { display: flex; gap: 12px; }
         .bottom-buttons button { flex: 1; padding: 16px; }
 
+        /* Game Over Screen */
+        #game-over-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            place-items: center;
+            z-index: 2000;
+            color: #ff1744;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #game-over-screen h1 {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px #ff1744aa;
+        }
+
+        #game-over-screen p {
+            font-size: 1.6rem;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+        }
+
+        #game-over-screen button {
+            background: #424242;
+            color: white;
+            font-size: 1.3rem;
+            padding: 20px 60px;
+        }
+
         .modal {
             position: fixed;
             inset: 0;
@@ -193,7 +225,7 @@
 
             <div class="class-card" data-class="teleportador">
                 <div class="square"><div class="circle teleportador"></div></div>
-                <h2>Jumper</h2>
+                <h2>Teleportador</h2>
             </div>
         </div>
 
@@ -237,6 +269,15 @@
     </div>
 </div>
 
+<!-- Game Over -->
+<div id="game-over-screen">
+    <div>
+        <h1>GAME OVER</h1>
+        <p>Sua tampinha caiu... ou foi destruída!</p>
+        <button id="back-to-menu">Voltar ao Menu</button>
+    </div>
+</div>
+
 <!-- Modal Iniciativa -->
 <div id="initiative-modal" class="modal">
     <div class="modal-content">
@@ -246,7 +287,7 @@
     </div>
 </div>
 
-<!-- Modal Regras (atualizado com todas as regras) -->
+<!-- Modal Regras -->
 <div id="rules-modal" class="modal">
     <div class="modal-content" style="text-align:left;">
         <h2 style="text-align:center;">Regras do Jogo</h2>
@@ -289,37 +330,40 @@ const skillMessages = {
     teleportador: "Teleportar! Pode colocar qualquer jogador em qualquer lugar da mesa (sem ataque neste turno)"
 };
 
-const startScreen = document.getElementById('start-screen');
-const gameScreen = document.getElementById('game-screen');
-const initiativeModal = document.getElementById('initiative-modal');
-const initiativeNumber = document.getElementById('initiative-number');
-const rulesModal = document.getElementById('rules-modal');
-const messageDiv = document.getElementById('message');
+const elements = {
+    startScreen: document.getElementById('start-screen'),
+    gameScreen: document.getElementById('game-screen'),
+    gameOverScreen: document.getElementById('game-over-screen'),
+    initiativeModal: document.getElementById('initiative-modal'),
+    initiativeNumber: document.getElementById('initiative-number'),
+    rulesModal: document.getElementById('rules-modal'),
+    messageDiv: document.getElementById('message')
+};
 
 // Seleção de classe
 document.querySelectorAll('.class-card').forEach(card => {
     card.addEventListener('click', () => {
         state.class = card.dataset.class;
         const rnd = Math.floor(Math.random() * 100) + 1;
-        initiativeNumber.textContent = rnd;
-        initiativeModal.style.display = 'grid';
+        elements.initiativeNumber.textContent = rnd;
+        elements.initiativeModal.style.display = 'grid';
     });
 });
 
-// OK iniciativa → jogo
+// OK iniciativa
 document.getElementById('ok-initiative').addEventListener('click', () => {
-    initiativeModal.style.display = 'none';
-    startScreen.style.display = 'none';
-    gameScreen.style.display = 'block';
+    elements.initiativeModal.style.display = 'none';
+    elements.startScreen.style.display = 'none';
+    elements.gameScreen.style.display = 'block';
     resetGame();
     updateUI();
 });
 
 // Regras
-document.getElementById('rules-btn').addEventListener('click', () => rulesModal.style.display = 'grid');
-document.getElementById('close-rules').addEventListener('click', () => rulesModal.style.display = 'none');
+document.getElementById('rules-btn').addEventListener('click', () => elements.rulesModal.style.display = 'grid');
+document.getElementById('close-rules').addEventListener('click', () => elements.rulesModal.style.display = 'none');
 
-// Aplicar dano (10 ou 20)
+// Dano recebido
 document.getElementById('dmg-10').addEventListener('click', () => applyDamage(10));
 document.getElementById('dmg-20').addEventListener('click', () => applyDamage(20));
 
@@ -331,6 +375,7 @@ function applyDamage(dmg) {
         state.health = Math.max(0, state.health - dmg);
         showMessage(`-${dmg} de dano`, '#ff7043');
     }
+    checkGameOver();
     updateUI();
 }
 
@@ -344,7 +389,7 @@ document.getElementById('attack-btn').addEventListener('click', () => {
     const dmg = state.doubleDamage ? 20 : 10;
     state.doubleDamage = false;
     state.charge = Math.min(100, state.charge + 20);
-    state.noAttackThisTurn = false; // reseta caso venha de habilidade anterior
+    state.noAttackThisTurn = false;
     showMessage(`Ataque! Dano causado: ${dmg}`, colors[state.class]);
     updateUI();
 });
@@ -372,8 +417,27 @@ document.getElementById('skill-btn').addEventListener('click', () => {
         showMessage(msg, color);
     }
 
+    checkGameOver();
     updateUI();
 });
+
+// Game Over check
+function checkGameOver() {
+    if (state.health <= 0) {
+        elements.gameScreen.style.display = 'none';
+        elements.gameOverScreen.style.display = 'grid';
+    }
+}
+
+// Game Over → voltar ao menu
+elements.gameOverScreen.addEventListener('click', returnToStart);
+document.getElementById('back-to-menu').addEventListener('click', returnToStart);
+
+function returnToStart() {
+    elements.gameOverScreen.style.display = 'none';
+    elements.startScreen.style.display = 'block';
+    resetGame();
+}
 
 // Reiniciar / Voltar
 document.getElementById('reset-btn').addEventListener('click', () => {
@@ -383,8 +447,8 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 });
 
 document.getElementById('back-btn').addEventListener('click', () => {
-    gameScreen.style.display = 'none';
-    startScreen.style.display = 'block';
+    elements.gameScreen.style.display = 'none';
+    elements.startScreen.style.display = 'block';
 });
 
 function resetGame() {
@@ -417,16 +481,15 @@ function updateUI() {
         btn.style.display = 'none';
     }
 
-    // Desativa botão de ataque se for Teleportador e usou habilidade
     document.getElementById('attack-btn').style.opacity = state.noAttackThisTurn ? '0.5' : '1';
     document.getElementById('attack-btn').style.pointerEvents = state.noAttackThisTurn ? 'none' : 'auto';
 }
 
 function showMessage(text, color) {
-    messageDiv.textContent = text;
-    messageDiv.style.color = color;
-    messageDiv.classList.add('show');
-    setTimeout(() => messageDiv.classList.remove('show'), 8000);
+    elements.messageDiv.textContent = text;
+    elements.messageDiv.style.color = color;
+    elements.messageDiv.classList.add('show');
+    setTimeout(() => elements.messageDiv.classList.remove('show'), 8000);
 }
 </script>
 </body>
