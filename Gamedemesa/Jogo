@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker de Jogo - Classes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 400px;
+            padding: 20px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .square {
+            width: 120px;
+            height: 120px;
+            border: 4px solid #fff;
+            border-radius: 20px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .cultista { background-color: #808080; }
+        .ladino { background-color: #ff0000; }
+        .guerreiro { background-color: #008000; }
+
+        #start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .class-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .class-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            gap: 20px;
+        }
+
+        #class-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .bar {
+            width: 100%;
+            height: 25px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.5s ease, background-color 0.3s;
+        }
+
+        #health-fill {
+            background: linear-gradient(to right, #ff0000, #ffff00, #00ff00);
+        }
+
+        #charge-fill {
+            background: #2196F3;
+        }
+
+        #health-text, #charge-text {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        #damage-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #4CAF50;
+            color: white;
+            min-height: 48px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        #attack-btn {
+            background: #FF9800;
+        }
+
+        #skill-btn {
+            background: #808080;
+            font-size: 18px;
+        }
+
+        #reset-btn, #back-btn {
+            background: #f44336;
+            flex: 1;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        #message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 1000;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+
+        #message.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 480px) {
+            #container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="start-screen">
+            <h1>Escolha sua Classe</h1>
+            <div class="class-card" data-class="cultista">
+                <div class="square">
+                    <div class="circle cultista"></div>
+                </div>
+                <h2>Cultista</h2>
+            </div>
+            <div class="class-card" data-class="ladino">
+                <div class="square">
+                    <div class="circle ladino"></div>
+                </div>
+                <h2>Ladino</h2>
+            </div>
+            <div class="class-card" data-class="guerreiro">
+                <div class="square">
+                    <div class="circle guerreiro"></div>
+                </div>
+                <h2>Guerreiro</h2>
+            </div>
+        </div>
+
+        <div id="game-screen">
+            <div id="class-indicator">
+                <div class="square">
+                    <div class="circle"></div>
+                </div>
+                <h1 id="class-name"></h1>
+            </div>
+
+            <div class="stat">
+                <label>Vida:</label>
+                <div class="bar health-bar">
+                    <div class="fill" id="health-fill"></div>
+                </div>
+                <span id="health-text">100/100</span>
+            </div>
+
+            <div class="input-section">
+                <input type="number" id="damage-input" placeholder="Dano recebido" min="0" step="1">
+                <button id="apply-damage">Aplicar</button>
+            </div>
+
+            <div class="stat">
+                <label>Carga de Habilidade:</label>
+                <div class="bar charge-bar">
+                    <div class="fill" id="charge-fill"></div>
+                </div>
+                <span id="charge-text">0%</span>
+            </div>
+
+            <button id="attack-btn">Ataque Realizado</button>
+            <button id="skill-btn">Usar Habilidade</button>
+
+            <div class="bottom-buttons">
+                <button id="reset-btn">Reiniciar</button>
+                <button id="back-btn">Menu Principal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        const state = {
+            class: null,
+            health: 100,
+            maxHealth: 100,
+            charge: 0,
+            doubleDamage: false,
+            ignoreNext: false
+        };
+
+        const colors = {
+            cultista: '#808080',
+            ladino: '#ff0000',
+            guerreiro: '#008000'
+        };
+
+        const skillMessages = {
+            cultista: 'Você perde 20% da sua vida mas o próximo ataque dará 2x de dano!',
+            ladino: 'Agora você pode fazer dois movimentos!',
+            guerreiro: 'Você ignorará o próximo ataque recebido!'
+        };
+
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const messageDiv = document.getElementById('message');
+
+        // Seleção de classe
+        document.querySelectorAll('.class-card').forEach(card => {
+            card.addEventListener('click', () => {
+                state.class = card.dataset.class;
+                resetGame();
+                updateUI();
+                startScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
+            });
+        });
+
+        // Aplicar dano recebido
+        document.getElementById('apply-damage').addEventListener('click', () => {
+            const input = document.getElementById('damage-input');
+            const dmg = parseInt(input.value) || 0;
+            input.value = '';
+
+            if (dmg <= 0) return;
+
+            if (state.ignoreNext) {
+                showMessage('Ataque ignorado!', colors.guerreiro);
+                state.ignoreNext = false;
+            } else {
+                state.health = Math.max(0, state.health - dmg);
+                showMessage(`Recebeu ${dmg} de dano!`, '#ff4444');
+            }
+            updateUI();
+        });
+
+        // Ataque realizado (avança turno, carrega habilidade)
+        document.getElementById('attack-btn').addEventListener('click', () => {
+            const damage = state.doubleDamage ? 20 : 10;
+            state.doubleDamage = false;
+            state.charge = Math.min(100, state.charge + 20);
+            showMessage(`Ataque realizado! Dano causado: ${damage}`, colors[state.class]);
+            updateUI();
+        });
+
+        // Usar habilidade
+        document.getElementById('skill-btn').addEventListener('click', () => {
+            if (state.charge < 100) return;
+
+            state.charge = 0;
+            const color = colors[state.class];
+            const msg = skillMessages[state.class];
+
+            if (state.class === 'cultista') {
+                const sac = Math.floor(state.maxHealth * 0.2);
+                state.health = Math.max(0, state.health - sac);
+                state.doubleDamage = true;
+                showMessage(`${msg} (Perdeu ${sac} HP)`, color);
+            } else if (state.class === 'ladino') {
+                showMessage(msg, color);
+            } else if (state.class === 'guerreiro') {
+                state.ignoreNext = true;
+                showMessage(msg, color);
+            }
+
+            updateUI();
+        });
+
+        // Reiniciar (reseta estados da classe atual)
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            resetGame();
+            updateUI();
+            showMessage('Jogo reiniciado!', '#4CAF50');
+        });
+
+        // Voltar ao menu
+        document.getElementById('back-btn').addEventListener('click', () => {
+            gameScreen.style.display = 'none';
+            startScreen.style.display = 'flex';
+        });
+
+        // Enter no input aplica dano
+        document.getElementById('damage-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('apply-damage').click();
+            }
+        });
+
+        function resetGame() {
+            state.health = 100;
+            state.charge = 0;
+            state.doubleDamage = false;
+            state.ignoreNext = false;
+        }
+
+        function updateUI() {
+            // Indicador de classe
+            const circle = document.querySelector('#class-indicator .circle');
+            circle.className = `circle ${state.class}`;
+            document.getElementById('class-name').textContent = state.class.charAt(0).toUpperCase() + state.class.slice(1);
+
+            // Barra de vida
+            const healthPerc = (state.health / state.maxHealth) * 100;
+            const healthFill = document.getElementById('health-fill');
+            healthFill.style.width = healthPerc + '%';
+            let healthColor = '#ff0000';
+            if (healthPerc > 60) healthColor = '#00ff00';
+            else if (healthPerc > 30) healthColor = '#ffff00';
+            healthFill.style.backgroundColor = healthColor;
+            document.getElementById('health-text').textContent = `${Math.floor(state.health)}/${state.maxHealth}`;
+
+            // Barra de carga
+            const chargePerc = state.charge;
+            document.getElementById('charge-fill').style.width = chargePerc + '%';
+            document.getElementById('charge-text').textContent = `${chargePerc}%`;
+
+            // Botão de habilidade
+            const skillBtn = document.getElementById('skill-btn');
+            if (chargePerc >= 100) {
+                skillBtn.style.display = 'block';
+                skillBtn.textContent = state.class === 'cultista' ? 'Sacrificar' : 'Usar Habilidade';
+                skillBtn.style.backgroundColor = colors[state.class];
+            } else {
+                skillBtn.style.display = 'none';
+            }
+        }
+
+        function showMessage(text, color) {
+            messageDiv.textContent = text;
+            messageDiv.style.color = color;
+            messageDiv.classList.add('show');
+            setTimeout(() => {
+                messageDiv.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
