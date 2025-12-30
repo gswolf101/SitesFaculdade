@@ -5,50 +5,285 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tracker de Jogo - Classes</title>
     <style>
-        /* ... (o CSS continua exatamente igual, sem alterações) ... */
-        
-        #message {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.9);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
             color: white;
-            padding: 15px 25px;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 400px;
+            padding: 20px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .square {
+            width: 120px;
+            height: 120px;
+            border: 4px solid #fff;
+            border-radius: 20px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .cultista { background-color: #ffffff; }
+        .ladino { background-color: #ff0000; }
+        .guerreiro { background-color: #008000; }
+
+        #start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .class-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .class-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+
+        #rules-btn {
+            padding: 12px 24px;
+            background: #673ab7;
+            color: white;
+            border: none;
             border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.5s;
-            z-index: 1000;
-            max-width: 90%;
-            text-align: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            cursor: pointer;
         }
 
-        #message.show {
-            opacity: 1;
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            gap: 20px;
         }
+
+        /* Modal de iniciativa */
+        #initiative-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: #222;
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-align: center;
+            width: 90%;
+            max-width: 340px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        #initiative-number {
+            font-size: 72px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 20px 0;
+            text-shadow: 0 0 15px #ffd70088;
+        }
+
+        .modal-btn {
+            padding: 14px 40px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Modal de regras */
+        #rules-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .rules-content {
+            background: #222;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 360px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .rules-content ul {
+            list-style: none;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .rules-content li {
+            margin-bottom: 16px;
+        }
+
+        .close-btn {
+            background: #f44336;
+            margin-top: 20px;
+        }
+
+        /* ... resto do CSS continua igual ao anterior ... */
     </style>
 </head>
 <body>
-    <!-- HTML continua igual -->
+    <div id="container">
+        <div id="start-screen">
+            <h1>Escolha sua Classe</h1>
+            <div class="class-card" data-class="cultista">
+                <div class="square">
+                    <div class="circle cultista"></div>
+                </div>
+                <h2>Cultista</h2>
+            </div>
+            <div class="class-card" data-class="ladino">
+                <div class="square">
+                    <div class="circle ladino"></div>
+                </div>
+                <h2>Ladino</h2>
+            </div>
+            <div class="class-card" data-class="guerreiro">
+                <div class="square">
+                    <div class="circle guerreiro"></div>
+                </div>
+                <h2>Guerreiro</h2>
+            </div>
+
+            <button id="rules-btn">Regras</button>
+        </div>
+
+        <div id="game-screen">
+            <!-- ... conteúdo da tela de jogo continua igual ... -->
+        </div>
+    </div>
+
+    <!-- Modal de Iniciativa -->
+    <div id="initiative-modal">
+        <div class="modal-content">
+            <h2>Sua Iniciativa</h2>
+            <div id="initiative-number">??</div>
+            <button class="modal-btn" id="ok-initiative">OK</button>
+        </div>
+    </div>
+
+    <!-- Modal de Regras -->
+    <div id="rules-modal">
+        <div class="rules-content">
+            <h2>Regras do Jogo</h2>
+            <ul>
+                <li><strong>A ordem é decidida pelo número menor para o maior</strong></li>
+                <li><strong>Caiu da mesa perde 10 de vida</strong></li>
+            </ul>
+            <button class="modal-btn close-btn" id="close-rules">Fechar</button>
+        </div>
+    </div>
+
+    <div id="message"></div>
 
     <script>
-        // ... (todo o código anterior continua igual até a função showMessage) ...
+        // ... (o objeto state e colors continuam iguais) ...
 
-        function showMessage(text, color) {
-            messageDiv.textContent = text;
-            messageDiv.style.color = color;
-            messageDiv.classList.add('show');
-            
-            // Aumentado de 4000ms → 8000ms (8 segundos)
-            setTimeout(() => {
-                messageDiv.classList.remove('show');
-            }, 8000);
-        }
+        const initiativeModal = document.getElementById('initiative-modal');
+        const initiativeNumber = document.getElementById('initiative-number');
+        const okInitiative = document.getElementById('ok-initiative');
 
-        // ... (resto do script continua exatamente igual) ...
+        const rulesModal = document.getElementById('rules-modal');
+        const rulesBtn = document.getElementById('rules-btn');
+        const closeRules = document.getElementById('close-rules');
+
+        // Mostrar regras
+        rulesBtn.addEventListener('click', () => {
+            rulesModal.style.display = 'flex';
+        });
+
+        closeRules.addEventListener('click', () => {
+            rulesModal.style.display = 'none';
+        });
+
+        // Seleção de classe → gera iniciativa
+        document.querySelectorAll('.class-card').forEach(card => {
+            card.addEventListener('click', () => {
+                state.class = card.dataset.class;
+                resetGame();
+
+                // Gera número aleatório de 1 a 100
+                const randomInit = Math.floor(Math.random() * 100) + 1;
+                initiativeNumber.textContent = randomInit;
+
+                // Mostra modal de iniciativa
+                initiativeModal.style.display = 'flex';
+            });
+        });
+
+        // Fecha modal de iniciativa e mostra tela do jogo
+        okInitiative.addEventListener('click', () => {
+            initiativeModal.style.display = 'none';
+            updateUI();
+            startScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+        });
+
+        // ... (todo o resto do JavaScript continua exatamente igual ao anterior) ...
     </script>
 </body>
 </html>
