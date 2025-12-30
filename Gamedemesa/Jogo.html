@@ -76,9 +76,8 @@
     <div id="start-screen">
         <h1>Tracker Tampinhas</h1>
 
-        <div class="grid-2" style="margin:30px 0;">
-            <button id="single-player-btn" class="btn">Modo 1 Jogador</button>
-            <button id="dual-player-btn" class="btn">Modo 2 Jogadores</button>
+        <div style="margin:30px 0;">
+            <p style="text-align:center; margin-bottom:16px; opacity:0.9;">Escolha sua classe para começar</p>
         </div>
 
         <div class="grid-2 classes-grid">
@@ -101,9 +100,11 @@
         </div>
 
         <div style="display:flex; gap:12px; margin-top:24px;">
+            <button id="dual-player-btn" class="big" style="background:#0288d1; color:white; flex:1;">Modo 2 Jogadores</button>
             <button id="rules-btn" class="big" style="background:#7e57c2; color:white; flex:1;">Regras</button>
-            <button id="reset-all-btn" class="big" style="background:#616161; color:white; flex:1;">Reset Tudo</button>
         </div>
+
+        <button id="reset-all-btn" class="big" style="background:#424242; color:white; margin-top:16px;">Resetar Tudo</button>
     </div>
 
     <!-- Tela do jogo -->
@@ -248,27 +249,19 @@ function saveData() {
     localStorage.setItem(DUAL_MODE_KEY, dualMode);
 }
 
-// Modo 1 ou 2 jogadores
-document.getElementById('single-player-btn').addEventListener('click', () => {
-    dualMode = false;
-    els.playerSwitcher.classList.remove('active');
-    startGame();
-});
+function getCurrentState() {
+    return players[currentPlayer];
+}
 
+// Ativar modo 2 jogadores
 document.getElementById('dual-player-btn').addEventListener('click', () => {
     dualMode = true;
     els.playerSwitcher.classList.add('active');
-    startGame();
+    saveData();
+    showMessage('Modo 2 Jogadores ativado!', '#0288d1');
 });
 
-function startGame() {
-    saveData();
-    els.startScreen.style.display = 'none';
-    els.gameScreen.style.display = 'block';
-    updateUI();
-}
-
-// Seleção de classe
+// Seleção de classe (direto na tela inicial)
 document.querySelectorAll('.class-card').forEach(card => {
     card.addEventListener('click', () => {
         const playerState = getCurrentState();
@@ -281,13 +274,15 @@ document.querySelectorAll('.class-card').forEach(card => {
     });
 });
 
-// OK iniciativa
+// OK iniciativa → entra no jogo
 document.getElementById('ok-initiative').addEventListener('click', () => {
     els.initiativeModal.style.display = 'none';
+    els.startScreen.style.display = 'none';
+    els.gameScreen.style.display = 'block';
     updateUI();
 });
 
-// Switch player
+// Switch player (só se dualMode ativo)
 document.querySelectorAll('#player-switcher .player-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         currentPlayer = parseInt(btn.dataset.player);
@@ -327,10 +322,6 @@ function takeDamage(dmg, reason) {
     saveData();
     checkGameOver();
     updateUI();
-}
-
-function getCurrentState() {
-    return players[currentPlayer];
 }
 
 function triggerShake() {
@@ -451,7 +442,6 @@ function updateUI() {
     els.attackBtn.style.opacity = playerState.noAttackThisTurn ? '0.5' : '1';
     els.attackBtn.style.pointerEvents = playerState.noAttackThisTurn ? 'none' : 'auto';
 
-    // Switcher só visível no modo dual
     els.playerSwitcher.classList.toggle('active', dualMode);
 }
 
@@ -462,11 +452,10 @@ function showMessage(text, color) {
     setTimeout(() => els.messageDiv.classList.remove('show'), 8000);
 }
 
-// Início
-if (Object.values(players[1]).some(v => v !== null && v !== 100 && v !== 0)) {
-    els.startScreen.style.display = 'none';
-    els.gameScreen.style.display = 'block';
-    updateUI();
+// Início - sempre começa na tela de escolha de classe
+if (els.startScreen) {
+    els.startScreen.style.display = 'block';
+    els.gameScreen.style.display = 'none';
 }
 
 els.turnNum.textContent = turn;
