@@ -3,251 +3,69 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>Tracker - Tampinhas Batalha</title>
+    <title>Tracker - Tampinhas</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0d1117, #161b22);
-            color: #e6edf3;
-            min-height: 100vh;
-            touch-action: manipulation;
+            font-family:system-ui,-apple-system,sans-serif;
+            background:linear-gradient(135deg,#0d1117,#161b22);
+            color:#e6edf3;
+            min-height:100vh;
+            touch-action:manipulation;
         }
-
-        #container {
-            max-width: 420px;
-            margin: 0 auto;
-            padding: 16px;
-        }
-
-        h1 { font-size: 1.8rem; text-align: center; margin: 16px 0; }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 20px 0;
-        }
-
+        #container { max-width:420px; margin:0 auto; padding:16px; }
+        h1 { font-size:1.8rem; text-align:center; margin:16px 0; }
+        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
         .btn {
-            background: rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.15s;
-            user-select: none;
-            border: none;
-            color: inherit;
-            font-size: 1.1rem;
-            font-weight: bold;
+            background:rgba(255,255,255,0.06);
+            border-radius:16px;
+            padding:16px;
+            text-align:center;
+            cursor:pointer;
+            transition:all 0.15s;
+            user-select:none;
+            border:none;
+            color:inherit;
+            font-size:1.1rem;
+            font-weight:bold;
         }
-
-        .btn:active {
-            background: rgba(255,255,255,0.14);
-            transform: scale(0.97);
-        }
-
-        .btn.active {
-            background: rgba(255,255,255,0.25);
-            box-shadow: 0 4px 12px rgba(255,255,255,0.1);
-        }
-
-        .square {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 8px;
-            border: 3px solid #444;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-        }
-
-        .cultista   { background: #ffffff; }
-        .ladino     { background: #e53935; }
-        .guerreiro  { background: #43a047; }
-        .teleportador { background: #0288d1; }
-
-        #class-section { display: none; }
-
-        .bar {
-            height: 26px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 13px;
-            overflow: hidden;
-            margin: 8px 0 4px;
-        }
-
-        .health-bar.shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        .fill {
-            height: 100%;
-            transition: width 0.4s ease;
-        }
-
-        .damage-buttons {
-            display: flex;
-            gap: 12px;
-            margin: 16px 0;
-        }
-
-        .damage-btn {
-            flex: 1;
-            padding: 18px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            border-radius: 12px;
-            color: white;
-            cursor: pointer;
-            border: none;
-        }
-
-        #dmg-10 { background: #7cb342; }
-        #dmg-20 { background: #f4511e; }
-        #fell-off-table { 
-            width: 100%; 
-            background: #b71c1c !important; 
-            padding: 18px; 
-            margin: 12px 0; 
-            font-size: 1.3rem !important;
-            border-radius: 12px;
-        }
-
-        button.big {
-            width: 100%;
-            padding: 16px;
-            margin: 8px 0;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-
-        #attack-btn     { background: #fb8c00; color: white; }
-        #skill-btn      { display: none; font-size: 1.2rem; }
-        .bottom-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .bottom-buttons button { flex: 1; min-width: 48%; padding: 16px; }
-
-        #turn-display {
-            text-align: center;
-            font-size: 1.6rem;
-            font-weight: bold;
-            margin: 20px 0;
-            color: #ffeb3b;
-            text-shadow: 0 0 10px #ffeb3b55;
-        }
-
-        #player-switcher {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-
+        .btn:active { background:rgba(255,255,255,0.14); transform:scale(0.97); }
+        .btn.active { background:rgba(255,255,255,0.25); box-shadow:0 4px 12px rgba(255,255,255,0.1); }
+        .square { width:90px; height:90px; margin:0 auto 8px; border:3px solid #444; border-radius:14px; display:flex; align-items:center; justify-content:center; }
+        .circle { width:60px; height:60px; border-radius:50%; }
+        .cultista{background:#ffffff} .ladino{background:#e53935} .guerreiro{background:#43a047} .teleportador{background:#0288d1}
+        .bar { height:26px; background:rgba(255,255,255,0.1); border-radius:13px; overflow:hidden; margin:8px 0 4px; }
+        .health-bar.shake { animation:shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)} }
+        .fill { height:100%; transition:width 0.4s ease; }
+        .damage-buttons { display:flex; gap:12px; margin:16px 0; }
+        .damage-btn { flex:1; padding:18px; font-size:1.4rem; font-weight:bold; border-radius:12px; color:white; cursor:pointer; border:none; }
+        #dmg-10 { background:#7cb342; } #dmg-20 { background:#f4511e; }
+        #fell-off-table { width:100%; background:#b71c1c !important; padding:18px; margin:12px 0; font-size:1.3rem !important; border-radius:12px; }
+        button.big { width:100%; padding:16px; margin:8px 0; font-size:1.1rem; font-weight:bold; border:none; border-radius:12px; cursor:pointer; }
+        #attack-btn { background:#fb8c00; color:white; }
+        #skill-btn { display:none; font-size:1.2rem; }
+        .bottom-buttons { display:flex; gap:8px; flex-wrap:wrap; }
+        .bottom-buttons button { flex:1; min-width:48%; padding:16px; }
+        #turn-display { text-align:center; font-size:1.6rem; font-weight:bold; margin:20px 0; color:#ffeb3b; text-shadow:0 0 10px #ffeb3b55; }
+        #player-switcher { display:flex; gap:12px; justify-content:center; margin-bottom:16px; visibility:hidden; }
+        #player-switcher.active { visibility:visible; }
         #game-over-screen {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            display: none;
-            place-items: center;
-            z-index: 2000;
-            color: #ff1744;
-            text-align: center;
-            cursor: pointer;
+            position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; place-items:center; z-index:2000; color:#ff1744; text-align:center; cursor:pointer;
         }
-
-        #game-over-screen h1 {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 30px #ff1744aa;
-        }
-
-        #game-over-screen p {
-            font-size: 1.6rem;
-            margin-bottom: 40px;
-            color: #e0e0e0;
-        }
-
-        #game-over-screen button {
-            background: #424242;
-            color: white;
-            font-size: 1.3rem;
-            padding: 20px 60px;
-        }
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            display: none;
-            place-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: #0f0f0f;
-            padding: 32px 24px;
-            border-radius: 20px;
-            width: 88%;
-            max-width: 360px;
-            text-align: center;
-        }
-
-        #initiative-number {
-            font-size: 5.5rem;
-            font-weight: bold;
-            color: #ffeb3b;
-            margin: 20px 0;
-        }
-
+        #game-over-screen h1 { font-size:5rem; margin-bottom:20px; text-shadow:0 0 30px #ff1744aa; }
+        #game-over-screen p { font-size:1.6rem; margin-bottom:40px; color:#e0e0e0; }
+        #game-over-screen button { background:#424242; color:white; font-size:1.3rem; padding:20px 60px; }
+        .modal { position:fixed; inset:0; background:rgba(0,0,0,0.92); display:none; place-items:center; z-index:1000; }
+        .modal-content { background:#0f0f0f; padding:32px 24px; border-radius:20px; width:88%; max-width:360px; text-align:center; }
+        #initiative-number { font-size:5.5rem; font-weight:bold; color:#ffeb3b; margin:20px 0; }
         #message {
-            position: fixed;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.88);
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            opacity: 0;
-            transition: opacity 0.4s;
-            z-index: 999;
-            max-width: 92%;
-            text-align: center;
-            pointer-events: none;
+            position:fixed; top:16px; left:50%; transform:translateX(-50%);
+            background:rgba(0,0,0,0.88); padding:14px 24px; border-radius:12px; font-size:1.05rem; font-weight:600;
+            opacity:0; transition:opacity 0.4s; z-index:999; max-width:92%; text-align:center; pointer-events:none;
         }
-
-        #message.show { opacity: 1; }
-
-        #init-text {
-            font-size: 1.1rem;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
+        #message.show { opacity:1; }
+        #init-text { font-size:1.1rem; opacity:0.8; margin-top:4px; }
     </style>
 </head>
 <body>
@@ -256,46 +74,42 @@
 
     <!-- Tela inicial -->
     <div id="start-screen">
-        <h1 id="start-title">Escolha o Jogador</h1>
+        <h1>Tracker Tampinhas</h1>
 
-        <div class="grid-2" id="player-selector">
-            <button class="btn player-btn" data-player="1">Jogador 1</button>
-            <button class="btn player-btn" data-player="2">Jogador 2</button>
+        <div class="grid-2" style="margin:30px 0;">
+            <button id="single-player-btn" class="btn">Modo 1 Jogador</button>
+            <button id="dual-player-btn" class="btn">Modo 2 Jogadores</button>
         </div>
 
-        <div id="class-section">
-            <h1 id="class-title">Escolha sua Classe para Jogador X</h1>
-
-            <div class="grid-2 classes-grid">
-                <div class="btn class-card" data-class="cultista">
-                    <div class="square"><div class="circle cultista"></div></div>
-                    <h2>Cultista</h2>
-                </div>
-
-                <div class="btn class-card" data-class="ladino">
-                    <div class="square"><div class="circle ladino"></div></div>
-                    <h2>Ladino</h2>
-                </div>
-
-                <div class="btn class-card" data-class="guerreiro">
-                    <div class="square"><div class="circle guerreiro"></div></div>
-                    <h2>Guerreiro</h2>
-                </div>
-
-                <div class="btn class-card" data-class="teleportador">
-                    <div class="square"><div class="circle teleportador"></div></div>
-                    <h2>Teleportador</h2>
-                </div>
+        <div class="grid-2 classes-grid">
+            <div class="btn class-card" data-class="cultista">
+                <div class="square"><div class="circle cultista"></div></div>
+                <h2>Cultista</h2>
+            </div>
+            <div class="btn class-card" data-class="ladino">
+                <div class="square"><div class="circle ladino"></div></div>
+                <h2>Ladino</h2>
+            </div>
+            <div class="btn class-card" data-class="guerreiro">
+                <div class="square"><div class="circle guerreiro"></div></div>
+                <h2>Guerreiro</h2>
+            </div>
+            <div class="btn class-card" data-class="teleportador">
+                <div class="square"><div class="circle teleportador"></div></div>
+                <h2>Teleportador</h2>
             </div>
         </div>
 
-        <button id="rules-btn" class="big" style="background:#7e57c2; color:white;">Regras do Jogo</button>
+        <div style="display:flex; gap:12px; margin-top:24px;">
+            <button id="rules-btn" class="big" style="background:#7e57c2; color:white; flex:1;">Regras</button>
+            <button id="reset-all-btn" class="big" style="background:#616161; color:white; flex:1;">Reset Tudo</button>
+        </div>
     </div>
 
     <!-- Tela do jogo -->
     <div id="game-screen" style="display:none;">
         <div id="player-switcher">
-            <button class="btn player-btn" data-player="1">J1</button>
+            <button class="btn player-btn active" data-player="1">J1</button>
             <button class="btn player-btn" data-player="2">J2</button>
         </div>
 
@@ -322,7 +136,7 @@
             <button id="fell-off-table" class="damage-btn">Caiu da Mesa (-10)</button>
         </div>
 
-        <div style="margin: 20px 0;">
+        <div style="margin:20px 0;">
             <strong>Carga de Habilidade</strong>
             <div class="bar"><div class="fill" id="charge-fill" style="background:#42a5f5;"></div></div>
             <div id="charge-text" style="text-align:center; font-size:1.2rem;">0%</div>
@@ -332,7 +146,7 @@
         <button id="skill-btn" class="big">Usar Habilidade</button>
 
         <div class="bottom-buttons">
-            <button id="reset-btn" class="btn" style="background:#e53935;">Reset Jogador</button>
+            <button id="reset-player-btn" class="btn" style="background:#e53935;">Reset Atual</button>
             <button id="back-btn" class="btn" style="background:#616161;">Voltar</button>
         </div>
     </div>
@@ -342,7 +156,7 @@
 <div id="game-over-screen">
     <div>
         <h1>GAME OVER</h1>
-        <p id="go-player">Jogador X</p>
+        <p id="go-player">Jogador —</p>
         <p>Sua tampinha caiu... ou foi destruída!</p>
         <button id="back-to-menu">Voltar ao Menu</button>
     </div>
@@ -351,7 +165,7 @@
 <!-- Modal Iniciativa -->
 <div id="initiative-modal" class="modal">
     <div class="modal-content">
-        <h2>Iniciativa do Jogador X</h2>
+        <h2>Iniciativa</h2>
         <div id="initiative-number">??</div>
         <button id="ok-initiative" style="background:#66bb6a; color:white; padding:18px 80px; font-size:1.4rem; margin-top:16px;">OK</button>
     </div>
@@ -364,9 +178,9 @@
         <ul style="list-style:none; line-height:1.6; margin:20px 0; font-size:1.05rem;">
             <li>• A ordem é decidida pelo número menor para o maior</li>
             <li>• Caiu da mesa perde 10 de vida</li>
-            <li>• O jogador deve usar apenas <strong>uma mão</strong> para se movimentar, seja criativo, mas sem usar objetos, apenas a sua mão</li>
-            <li>• O dano é aplicado quando uma tampinha acertar a outra</li>
-            <li>• Ao ativar a habilidade o jogador deve anunciar que irá usá-la</li>
+            <li>• Use apenas **uma mão** para se movimentar (sem objetos)</li>
+            <li>• Dano quando tampinha acerta outra</li>
+            <li>• Anuncie ao usar habilidade</li>
         </ul>
         <button id="close-rules" style="background:#e53935; color:white; width:100%; padding:16px; font-size:1.1rem; margin-top:16px;">Fechar</button>
     </div>
@@ -377,10 +191,19 @@
 <script>
 const PLAYER_KEY = 'tampinhas_players';
 const TURN_KEY = 'tampinhas_turn';
+const DUAL_MODE_KEY = 'tampinhas_dual_mode';
 
-let players = {};
+let dualMode = localStorage.getItem(DUAL_MODE_KEY) === 'true';
 let currentPlayer = 1;
-let turn = 0;
+let turn = parseInt(localStorage.getItem(TURN_KEY) || '0');
+let players = JSON.parse(localStorage.getItem(PLAYER_KEY) || '{}');
+
+if (!players[1]) {
+    players = {
+        1: {class:null, health:100, maxHealth:100, charge:0, doubleDamage:false, ignoreNext:false, noAttackThisTurn:false, initiative:0},
+        2: {class:null, health:100, maxHealth:100, charge:0, doubleDamage:false, ignoreNext:false, noAttackThisTurn:false, initiative:0}
+    };
+}
 
 const colors = {
     cultista: '#ffffff',
@@ -396,7 +219,7 @@ const skillMessages = {
     teleportador: "Teleportar! Pode colocar qualquer jogador em qualquer lugar da mesa (sem ataque neste turno)"
 };
 
-const elements = {
+const els = {
     startScreen: document.getElementById('start-screen'),
     gameScreen: document.getElementById('game-screen'),
     gameOverScreen: document.getElementById('game-over-screen'),
@@ -415,87 +238,78 @@ const elements = {
     attackBtn: document.getElementById('attack-btn'),
     skillBtn: document.getElementById('skill-btn'),
     turnNum: document.getElementById('turn-num'),
-    startTitle: document.getElementById('start-title'),
-    classTitle: document.getElementById('class-title'),
-    playerSelector: document.getElementById('player-selector'),
-    classSection: document.getElementById('class-section'),
+    playerSwitcher: document.getElementById('player-switcher'),
     goPlayer: document.getElementById('go-player')
 };
-
-function initApp() {
-    loadData();
-    updateStartTitle();
-    document.getElementById('turn-num').textContent = turn;
-}
-
-function loadData() {
-    const savedPlayers = localStorage.getItem(PLAYER_KEY);
-    if (savedPlayers) {
-        players = JSON.parse(savedPlayers);
-    } else {
-        players = {
-            1: {class: null, health: 100, maxHealth: 100, charge: 0, doubleDamage: false, ignoreNext: false, noAttackThisTurn: false, initiative: 0},
-            2: {class: null, health: 100, maxHealth: 100, charge: 0, doubleDamage: false, ignoreNext: false, noAttackThisTurn: false, initiative: 0}
-        };
-    }
-    turn = parseInt(localStorage.getItem(TURN_KEY) || '0');
-}
 
 function saveData() {
     localStorage.setItem(PLAYER_KEY, JSON.stringify(players));
     localStorage.setItem(TURN_KEY, turn.toString());
+    localStorage.setItem(DUAL_MODE_KEY, dualMode);
 }
 
-// Player selection in start
-document.querySelectorAll('#player-selector .player-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        currentPlayer = parseInt(btn.dataset.player);
-        elements.playerSelector.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        elements.classSection.style.display = 'block';
-        updateStartTitle();
-        saveData();
-    });
+// Modo 1 ou 2 jogadores
+document.getElementById('single-player-btn').addEventListener('click', () => {
+    dualMode = false;
+    els.playerSwitcher.classList.remove('active');
+    startGame();
 });
 
-// Class selection
+document.getElementById('dual-player-btn').addEventListener('click', () => {
+    dualMode = true;
+    els.playerSwitcher.classList.add('active');
+    startGame();
+});
+
+function startGame() {
+    saveData();
+    els.startScreen.style.display = 'none';
+    els.gameScreen.style.display = 'block';
+    updateUI();
+}
+
+// Seleção de classe
 document.querySelectorAll('.class-card').forEach(card => {
     card.addEventListener('click', () => {
         const playerState = getCurrentState();
         playerState.class = card.dataset.class;
         const rnd = Math.floor(Math.random() * 100) + 1;
         playerState.initiative = rnd;
-        elements.initiativeNumber.textContent = rnd;
-        document.querySelector('#initiative-modal h2').textContent = `Iniciativa do Jogador ${currentPlayer}`;
-        elements.initiativeModal.style.display = 'grid';
+        els.initiativeNumber.textContent = rnd;
+        els.initiativeModal.style.display = 'grid';
         saveData();
     });
 });
 
-// OK initiative
+// OK iniciativa
 document.getElementById('ok-initiative').addEventListener('click', () => {
-    elements.initiativeModal.style.display = 'none';
-    elements.startScreen.style.display = 'none';
-    elements.gameScreen.style.display = 'block';
+    els.initiativeModal.style.display = 'none';
     updateUI();
 });
 
-// Player switch in game
+// Switch player
 document.querySelectorAll('#player-switcher .player-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         currentPlayer = parseInt(btn.dataset.player);
-        document.querySelectorAll('#player-switcher .player-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        document.querySelectorAll('#player-switcher .player-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.player) === currentPlayer));
         updateUI();
         checkGameOver();
     });
 });
 
 // Regras
-document.getElementById('rules-btn').addEventListener('click', () => elements.rulesModal.style.display = 'grid');
-document.getElementById('close-rules').addEventListener('click', () => elements.rulesModal.style.display = 'none');
+document.getElementById('rules-btn').addEventListener('click', () => els.rulesModal.style.display = 'grid');
+document.getElementById('close-rules').addEventListener('click', () => els.rulesModal.style.display = 'none');
 
-// Damage
+// Reset tudo
+document.getElementById('reset-all-btn').addEventListener('click', () => {
+    if (confirm("Resetar TODOS os dados?")) {
+        localStorage.clear();
+        location.reload();
+    }
+});
+
+// Dano
 document.getElementById('dmg-10').addEventListener('click', () => takeDamage(10, 'Dano normal'));
 document.getElementById('dmg-20').addEventListener('click', () => takeDamage(20, 'Dano crítico'));
 document.getElementById('fell-off-table').addEventListener('click', () => takeDamage(10, 'CAIU DA MESA!'));
@@ -519,8 +333,14 @@ function getCurrentState() {
     return players[currentPlayer];
 }
 
-// Attack
-elements.attackBtn.addEventListener('click', () => {
+function triggerShake() {
+    els.healthBar.classList.remove('shake');
+    void els.healthBar.offsetWidth;
+    els.healthBar.classList.add('shake');
+}
+
+// Ataque
+els.attackBtn.addEventListener('click', () => {
     const playerState = getCurrentState();
     if (playerState.noAttackThisTurn) {
         showMessage("Não pode atacar após Teleportar!", '#ff7043');
@@ -531,14 +351,14 @@ elements.attackBtn.addEventListener('click', () => {
     playerState.charge = Math.min(100, playerState.charge + 20);
     playerState.noAttackThisTurn = false;
     turn++;
-    elements.turnNum.textContent = turn;
+    els.turnNum.textContent = turn;
     showMessage(`Ataque! Dano causado: ${dmg}`, colors[playerState.class]);
     saveData();
     updateUI();
 });
 
-// Skill
-elements.skillBtn.addEventListener('click', () => {
+// Habilidade
+els.skillBtn.addEventListener('click', () => {
     const playerState = getCurrentState();
     if (playerState.charge < 100) return;
     playerState.charge = 0;
@@ -566,76 +386,60 @@ elements.skillBtn.addEventListener('click', () => {
     updateUI();
 });
 
-function triggerShake() {
-    elements.healthBar.classList.remove('shake');
-    void elements.healthBar.offsetWidth;
-    elements.healthBar.classList.add('shake');
-}
+// Reset jogador atual
+document.getElementById('reset-player-btn').addEventListener('click', () => {
+    const playerState = getCurrentState();
+    playerState.health = 100;
+    playerState.charge = 0;
+    playerState.doubleDamage = false;
+    playerState.ignoreNext = false;
+    playerState.noAttackThisTurn = false;
+    saveData();
+    updateUI();
+    showMessage('Jogador atual reiniciado!', '#66bb6a');
+});
 
+// Voltar
+document.getElementById('back-btn').addEventListener('click', () => {
+    els.gameScreen.style.display = 'none';
+    els.startScreen.style.display = 'block';
+});
+
+// Game Over
 function checkGameOver() {
     const playerState = getCurrentState();
     if (playerState.health <= 0 && playerState.class) {
-        elements.goPlayer.textContent = `Jogador ${currentPlayer}`;
-        elements.gameScreen.style.display = 'none';
-        elements.gameOverScreen.style.display = 'grid';
+        els.goPlayer.textContent = dualMode ? `Jogador ${currentPlayer}` : '';
+        els.gameScreen.style.display = 'none';
+        els.gameOverScreen.style.display = 'grid';
     }
 }
 
-// Game Over click
-elements.gameOverScreen.addEventListener('click', returnToStart);
+els.gameOverScreen.addEventListener('click', returnToStart);
 document.getElementById('back-to-menu').addEventListener('click', returnToStart);
 
 function returnToStart() {
-    elements.gameOverScreen.style.display = 'none';
-    elements.startScreen.style.display = 'block';
-    // Don't reset player state here
-}
-
-// Reset current player
-document.getElementById('reset-btn').addEventListener('click', () => {
-    players[currentPlayer] = {
-        class: players[currentPlayer].class, // Keep class and init
-        health: 100,
-        maxHealth: 100,
-        charge: 0,
-        doubleDamage: false,
-        ignoreNext: false,
-        noAttackThisTurn: false,
-        initiative: players[currentPlayer].initiative
-    };
-    saveData();
-    updateUI();
-    showMessage('Jogador reiniciado!', '#66bb6a');
-});
-
-// Back to menu
-document.getElementById('back-btn').addEventListener('click', () => {
-    elements.gameScreen.style.display = 'none';
-    elements.startScreen.style.display = 'block';
-});
-
-function updateStartTitle() {
-    elements.startTitle.textContent = `Escolha o Jogador`;
-    elements.classTitle.textContent = `Escolha sua Classe para Jogador ${currentPlayer}`;
+    els.gameOverScreen.style.display = 'none';
+    els.startScreen.style.display = 'block';
 }
 
 function updateUI() {
     const playerState = getCurrentState();
     if (!playerState.class) return;
 
-    elements.classCircle.className = `circle ${playerState.class}`;
-    elements.className.textContent = playerState.class.charAt(0).toUpperCase() + playerState.class.slice(1);
-    elements.initText.textContent = `Init: ${playerState.initiative}`;
+    els.classCircle.className = `circle ${playerState.class}`;
+    els.className.textContent = playerState.class.charAt(0).toUpperCase() + playerState.class.slice(1);
+    els.initText.textContent = `Init: ${playerState.initiative}`;
 
     const hpPerc = playerState.health / playerState.maxHealth * 100;
-    elements.healthFill.style.width = hpPerc + '%';
-    elements.healthFill.style.background = hpPerc > 60 ? '#66bb6a' : hpPerc > 30 ? '#ffca28' : '#e53935';
-    elements.healthText.textContent = `${Math.floor(playerState.health)} / ${playerState.maxHealth}`;
+    els.healthFill.style.width = hpPerc + '%';
+    els.healthFill.style.background = hpPerc > 60 ? '#66bb6a' : hpPerc > 30 ? '#ffca28' : '#e53935';
+    els.healthText.textContent = `${Math.floor(playerState.health)} / ${playerState.maxHealth}`;
 
-    elements.chargeFill.style.width = playerState.charge + '%';
-    elements.chargeText.textContent = `${playerState.charge}%`;
+    els.chargeFill.style.width = playerState.charge + '%';
+    els.chargeText.textContent = `${playerState.charge}%`;
 
-    const btn = elements.skillBtn;
+    const btn = els.skillBtn;
     if (playerState.charge >= 100) {
         btn.style.display = 'block';
         btn.textContent = playerState.class === 'cultista' ? 'Sacrificar' : 'Usar Habilidade';
@@ -644,23 +448,28 @@ function updateUI() {
         btn.style.display = 'none';
     }
 
-    elements.attackBtn.style.opacity = playerState.noAttackThisTurn ? '0.5' : '1';
-    elements.attackBtn.style.pointerEvents = playerState.noAttackThisTurn ? 'none' : 'auto';
+    els.attackBtn.style.opacity = playerState.noAttackThisTurn ? '0.5' : '1';
+    els.attackBtn.style.pointerEvents = playerState.noAttackThisTurn ? 'none' : 'auto';
 
-    // Update player switcher active
-    document.querySelectorAll('#player-switcher .player-btn').forEach(b => {
-        b.classList.toggle('active', parseInt(b.dataset.player) === currentPlayer);
-    });
+    // Switcher só visível no modo dual
+    els.playerSwitcher.classList.toggle('active', dualMode);
 }
 
 function showMessage(text, color) {
-    elements.messageDiv.textContent = text;
-    elements.messageDiv.style.color = color;
-    elements.messageDiv.classList.add('show');
-    setTimeout(() => elements.messageDiv.classList.remove('show'), 8000);
+    els.messageDiv.textContent = text;
+    els.messageDiv.style.color = color;
+    els.messageDiv.classList.add('show');
+    setTimeout(() => els.messageDiv.classList.remove('show'), 8000);
 }
 
-initApp();
+// Início
+if (Object.values(players[1]).some(v => v !== null && v !== 100 && v !== 0)) {
+    els.startScreen.style.display = 'none';
+    els.gameScreen.style.display = 'block';
+    updateUI();
+}
+
+els.turnNum.textContent = turn;
 </script>
 </body>
 </html>
