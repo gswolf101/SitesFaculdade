@@ -30,7 +30,6 @@
             font-weight:bold;
         }
         .btn:active { background:rgba(255,255,255,0.14); transform:scale(0.97); }
-        .btn.active { background:rgba(255,255,255,0.25); box-shadow:0 4px 12px rgba(255,255,255,0.1); }
         .square { width:90px; height:90px; margin:0 auto 8px; border:3px solid #444; border-radius:14px; display:flex; align-items:center; justify-content:center; }
         .circle { width:60px; height:60px; border-radius:50%; }
         .cultista{background:#ffffff} .ladino{background:#e53935} .guerreiro{background:#43a047} .teleportador{background:#0288d1}
@@ -48,8 +47,6 @@
         .bottom-buttons { display:flex; gap:8px; flex-wrap:wrap; }
         .bottom-buttons button { flex:1; min-width:48%; padding:16px; }
         #turn-display { text-align:center; font-size:1.6rem; font-weight:bold; margin:20px 0; color:#ffeb3b; text-shadow:0 0 10px #ffeb3b55; }
-        #player-switcher { display:flex; gap:12px; justify-content:center; margin-bottom:16px; visibility:hidden; }
-        #player-switcher.active { visibility:visible; }
         #game-over-screen {
             position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; place-items:center; z-index:2000; color:#ff1744; text-align:center; cursor:pointer;
         }
@@ -76,9 +73,7 @@
     <div id="start-screen">
         <h1>Tracker Tampinhas</h1>
 
-        <div style="margin:30px 0;">
-            <p style="text-align:center; margin-bottom:16px; opacity:0.9;">Escolha sua classe para começar</p>
-        </div>
+        <p style="text-align:center; margin:16px 0; opacity:0.9;">Escolha sua classe para começar</p>
 
         <div class="grid-2 classes-grid">
             <div class="btn class-card" data-class="cultista">
@@ -100,20 +95,13 @@
         </div>
 
         <div style="display:flex; gap:12px; margin-top:24px;">
-            <button id="dual-player-btn" class="big" style="background:#0288d1; color:white; flex:1;">Modo 2 Jogadores</button>
             <button id="rules-btn" class="big" style="background:#7e57c2; color:white; flex:1;">Regras</button>
+            <button id="reset-all-btn" class="big" style="background:#424242; color:white; flex:1;">Resetar Tudo</button>
         </div>
-
-        <button id="reset-all-btn" class="big" style="background:#424242; color:white; margin-top:16px;">Resetar Tudo</button>
     </div>
 
     <!-- Tela do jogo -->
     <div id="game-screen" style="display:none;">
-        <div id="player-switcher">
-            <button class="btn player-btn active" data-player="1">J1</button>
-            <button class="btn player-btn" data-player="2">J2</button>
-        </div>
-
         <div id="turn-display">Turno: <span id="turn-num">0</span></div>
 
         <div style="text-align:center; margin-bottom:16px;">
@@ -147,7 +135,7 @@
         <button id="skill-btn" class="big">Usar Habilidade</button>
 
         <div class="bottom-buttons">
-            <button id="reset-player-btn" class="btn" style="background:#e53935;">Reset Atual</button>
+            <button id="reset-player-btn" class="btn" style="background:#e53935;">Resetar</button>
             <button id="back-btn" class="btn" style="background:#616161;">Voltar</button>
         </div>
     </div>
@@ -157,7 +145,6 @@
 <div id="game-over-screen">
     <div>
         <h1>GAME OVER</h1>
-        <p id="go-player">Jogador —</p>
         <p>Sua tampinha caiu... ou foi destruída!</p>
         <button id="back-to-menu">Voltar ao Menu</button>
     </div>
@@ -166,7 +153,7 @@
 <!-- Modal Iniciativa -->
 <div id="initiative-modal" class="modal">
     <div class="modal-content">
-        <h2>Iniciativa</h2>
+        <h2>Sua Iniciativa</h2>
         <div id="initiative-number">??</div>
         <button id="ok-initiative" style="background:#66bb6a; color:white; padding:18px 80px; font-size:1.4rem; margin-top:16px;">OK</button>
     </div>
@@ -190,19 +177,22 @@
 <div id="message"></div>
 
 <script>
-const PLAYER_KEY = 'tampinhas_players';
 const TURN_KEY = 'tampinhas_turn';
-const DUAL_MODE_KEY = 'tampinhas_dual_mode';
+const PLAYER_KEY = 'tampinhas_player';
 
-let dualMode = localStorage.getItem(DUAL_MODE_KEY) === 'true';
-let currentPlayer = 1;
 let turn = parseInt(localStorage.getItem(TURN_KEY) || '0');
-let players = JSON.parse(localStorage.getItem(PLAYER_KEY) || '{}');
+let player = JSON.parse(localStorage.getItem(PLAYER_KEY) || '{}');
 
-if (!players[1]) {
-    players = {
-        1: {class:null, health:100, maxHealth:100, charge:0, doubleDamage:false, ignoreNext:false, noAttackThisTurn:false, initiative:0},
-        2: {class:null, health:100, maxHealth:100, charge:0, doubleDamage:false, ignoreNext:false, noAttackThisTurn:false, initiative:0}
+if (!player.class) {
+    player = {
+        class: null,
+        health: 100,
+        maxHealth: 100,
+        charge: 0,
+        doubleDamage: false,
+        ignoreNext: false,
+        noAttackThisTurn: false,
+        initiative: 0
     };
 }
 
@@ -239,57 +229,32 @@ const els = {
     attackBtn: document.getElementById('attack-btn'),
     skillBtn: document.getElementById('skill-btn'),
     turnNum: document.getElementById('turn-num'),
-    playerSwitcher: document.getElementById('player-switcher'),
     goPlayer: document.getElementById('go-player')
 };
 
 function saveData() {
-    localStorage.setItem(PLAYER_KEY, JSON.stringify(players));
+    localStorage.setItem(PLAYER_KEY, JSON.stringify(player));
     localStorage.setItem(TURN_KEY, turn.toString());
-    localStorage.setItem(DUAL_MODE_KEY, dualMode);
 }
 
-function getCurrentState() {
-    return players[currentPlayer];
-}
-
-// Ativar modo 2 jogadores
-document.getElementById('dual-player-btn').addEventListener('click', () => {
-    dualMode = true;
-    els.playerSwitcher.classList.add('active');
-    saveData();
-    showMessage('Modo 2 Jogadores ativado!', '#0288d1');
-});
-
-// Seleção de classe (direto na tela inicial)
+// Seleção de classe
 document.querySelectorAll('.class-card').forEach(card => {
     card.addEventListener('click', () => {
-        const playerState = getCurrentState();
-        playerState.class = card.dataset.class;
+        player.class = card.dataset.class;
         const rnd = Math.floor(Math.random() * 100) + 1;
-        playerState.initiative = rnd;
+        player.initiative = rnd;
         els.initiativeNumber.textContent = rnd;
         els.initiativeModal.style.display = 'grid';
         saveData();
     });
 });
 
-// OK iniciativa → entra no jogo
+// OK iniciativa → jogo
 document.getElementById('ok-initiative').addEventListener('click', () => {
     els.initiativeModal.style.display = 'none';
     els.startScreen.style.display = 'none';
     els.gameScreen.style.display = 'block';
     updateUI();
-});
-
-// Switch player (só se dualMode ativo)
-document.querySelectorAll('#player-switcher .player-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        currentPlayer = parseInt(btn.dataset.player);
-        document.querySelectorAll('#player-switcher .player-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.player) === currentPlayer));
-        updateUI();
-        checkGameOver();
-    });
 });
 
 // Regras
@@ -298,7 +263,7 @@ document.getElementById('close-rules').addEventListener('click', () => els.rules
 
 // Reset tudo
 document.getElementById('reset-all-btn').addEventListener('click', () => {
-    if (confirm("Resetar TODOS os dados?")) {
+    if (confirm("Resetar tudo e voltar ao início?")) {
         localStorage.clear();
         location.reload();
     }
@@ -310,12 +275,11 @@ document.getElementById('dmg-20').addEventListener('click', () => takeDamage(20,
 document.getElementById('fell-off-table').addEventListener('click', () => takeDamage(10, 'CAIU DA MESA!'));
 
 function takeDamage(dmg, reason) {
-    const playerState = getCurrentState();
-    if (playerState.ignoreNext) {
+    if (player.ignoreNext) {
         showMessage("Ataque ignorado!", colors.guerreiro);
-        playerState.ignoreNext = false;
+        player.ignoreNext = false;
     } else {
-        playerState.health = Math.max(0, playerState.health - dmg);
+        player.health = Math.max(0, player.health - dmg);
         showMessage(`${reason} -${dmg} HP`, '#ff7043');
         triggerShake();
     }
@@ -332,43 +296,41 @@ function triggerShake() {
 
 // Ataque
 els.attackBtn.addEventListener('click', () => {
-    const playerState = getCurrentState();
-    if (playerState.noAttackThisTurn) {
+    if (player.noAttackThisTurn) {
         showMessage("Não pode atacar após Teleportar!", '#ff7043');
         return;
     }
-    const dmg = playerState.doubleDamage ? 20 : 10;
-    playerState.doubleDamage = false;
-    playerState.charge = Math.min(100, playerState.charge + 20);
-    playerState.noAttackThisTurn = false;
+    const dmg = player.doubleDamage ? 20 : 10;
+    player.doubleDamage = false;
+    player.charge = Math.min(100, player.charge + 20);
+    player.noAttackThisTurn = false;
     turn++;
     els.turnNum.textContent = turn;
-    showMessage(`Ataque! Dano causado: ${dmg}`, colors[playerState.class]);
+    showMessage(`Ataque! Dano causado: ${dmg}`, colors[player.class]);
     saveData();
     updateUI();
 });
 
 // Habilidade
 els.skillBtn.addEventListener('click', () => {
-    const playerState = getCurrentState();
-    if (playerState.charge < 100) return;
-    playerState.charge = 0;
-    const color = colors[playerState.class];
-    const msg = skillMessages[playerState.class];
+    if (player.charge < 100) return;
+    player.charge = 0;
+    const color = colors[player.class];
+    const msg = skillMessages[player.class];
 
-    if (playerState.class === 'cultista') {
-        const sac = Math.floor(playerState.maxHealth * 0.10);
-        playerState.health = Math.max(0, playerState.health - sac);
-        playerState.doubleDamage = true;
+    if (player.class === 'cultista') {
+        const sac = Math.floor(player.maxHealth * 0.10);
+        player.health = Math.max(0, player.health - sac);
+        player.doubleDamage = true;
         showMessage(`${msg} (-${sac} HP)`, color);
         triggerShake();
-    } else if (playerState.class === 'ladino') {
+    } else if (player.class === 'ladino') {
         showMessage(msg, color);
-    } else if (playerState.class === 'guerreiro') {
-        playerState.ignoreNext = true;
+    } else if (player.class === 'guerreiro') {
+        player.ignoreNext = true;
         showMessage(msg, color);
-    } else if (playerState.class === 'teleportador') {
-        playerState.noAttackThisTurn = true;
+    } else if (player.class === 'teleportador') {
+        player.noAttackThisTurn = true;
         showMessage(msg, color);
     }
 
@@ -377,17 +339,16 @@ els.skillBtn.addEventListener('click', () => {
     updateUI();
 });
 
-// Reset jogador atual
+// Reset
 document.getElementById('reset-player-btn').addEventListener('click', () => {
-    const playerState = getCurrentState();
-    playerState.health = 100;
-    playerState.charge = 0;
-    playerState.doubleDamage = false;
-    playerState.ignoreNext = false;
-    playerState.noAttackThisTurn = false;
+    player.health = 100;
+    player.charge = 0;
+    player.doubleDamage = false;
+    player.ignoreNext = false;
+    player.noAttackThisTurn = false;
     saveData();
     updateUI();
-    showMessage('Jogador atual reiniciado!', '#66bb6a');
+    showMessage('Tudo reiniciado!', '#66bb6a');
 });
 
 // Voltar
@@ -398,9 +359,7 @@ document.getElementById('back-btn').addEventListener('click', () => {
 
 // Game Over
 function checkGameOver() {
-    const playerState = getCurrentState();
-    if (playerState.health <= 0 && playerState.class) {
-        els.goPlayer.textContent = dualMode ? `Jogador ${currentPlayer}` : '';
+    if (player.health <= 0 && player.class) {
         els.gameScreen.style.display = 'none';
         els.gameOverScreen.style.display = 'grid';
     }
@@ -415,34 +374,31 @@ function returnToStart() {
 }
 
 function updateUI() {
-    const playerState = getCurrentState();
-    if (!playerState.class) return;
+    if (!player.class) return;
 
-    els.classCircle.className = `circle ${playerState.class}`;
-    els.className.textContent = playerState.class.charAt(0).toUpperCase() + playerState.class.slice(1);
-    els.initText.textContent = `Init: ${playerState.initiative}`;
+    els.classCircle.className = `circle ${player.class}`;
+    els.className.textContent = player.class.charAt(0).toUpperCase() + player.class.slice(1);
+    els.initText.textContent = `Init: ${player.initiative}`;
 
-    const hpPerc = playerState.health / playerState.maxHealth * 100;
+    const hpPerc = player.health / player.maxHealth * 100;
     els.healthFill.style.width = hpPerc + '%';
     els.healthFill.style.background = hpPerc > 60 ? '#66bb6a' : hpPerc > 30 ? '#ffca28' : '#e53935';
-    els.healthText.textContent = `${Math.floor(playerState.health)} / ${playerState.maxHealth}`;
+    els.healthText.textContent = `${Math.floor(player.health)} / ${player.maxHealth}`;
 
-    els.chargeFill.style.width = playerState.charge + '%';
-    els.chargeText.textContent = `${playerState.charge}%`;
+    els.chargeFill.style.width = player.charge + '%';
+    els.chargeText.textContent = `${player.charge}%`;
 
     const btn = els.skillBtn;
-    if (playerState.charge >= 100) {
+    if (player.charge >= 100) {
         btn.style.display = 'block';
-        btn.textContent = playerState.class === 'cultista' ? 'Sacrificar' : 'Usar Habilidade';
-        btn.style.backgroundColor = colors[playerState.class];
+        btn.textContent = player.class === 'cultista' ? 'Sacrificar' : 'Usar Habilidade';
+        btn.style.backgroundColor = colors[player.class];
     } else {
         btn.style.display = 'none';
     }
 
-    els.attackBtn.style.opacity = playerState.noAttackThisTurn ? '0.5' : '1';
-    els.attackBtn.style.pointerEvents = playerState.noAttackThisTurn ? 'none' : 'auto';
-
-    els.playerSwitcher.classList.toggle('active', dualMode);
+    els.attackBtn.style.opacity = player.noAttackThisTurn ? '0.5' : '1';
+    els.attackBtn.style.pointerEvents = player.noAttackThisTurn ? 'none' : 'auto';
 }
 
 function showMessage(text, color) {
@@ -452,13 +408,17 @@ function showMessage(text, color) {
     setTimeout(() => els.messageDiv.classList.remove('show'), 8000);
 }
 
-// Início - sempre começa na tela de escolha de classe
-if (els.startScreen) {
-    els.startScreen.style.display = 'block';
-    els.gameScreen.style.display = 'none';
-}
-
+// Início
+els.startScreen.style.display = 'block';
+els.gameScreen.style.display = 'none';
 els.turnNum.textContent = turn;
+
+// Se já tinha classe salva, entra direto no jogo
+if (player.class) {
+    els.startScreen.style.display = 'none';
+    els.gameScreen.style.display = 'block';
+    updateUI();
+}
 </script>
 </body>
 </html>
